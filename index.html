@@ -431,12 +431,12 @@ async function loadWeather(){
 
     function makeTempChart(points){
       if(!points.length)return'';
-      const W=130,H=48,pad=10;
+      const W=130,H=70,pad=10;
       const temps=points.map(p=>p.temp);
       const mn=Math.min(...temps),mx=Math.max(...temps);
       const range=mx-mn||1;
       const xs=points.map((_,i)=>pad+i*(W-pad*2)/(points.length-1||1));
-      const ys=points.map(p=>H-8-((p.temp-mn)/range)*(H-20));
+      const ys=points.map(p=>H-14-((p.temp-mn)/range)*(H-32));
       const dots=points.map((p,i)=>`<circle cx="${xs[i]}" cy="${ys[i]}" r="3.5" fill="#f0c060"/><text x="${xs[i]}" y="${ys[i]-7}" text-anchor="middle" font-size="10" fill="#f0f2f8" font-family="sans-serif">${p.temp}°</text><text x="${xs[i]}" y="${H+4}" text-anchor="middle" font-size="9" fill="#8890aa" font-family="sans-serif">${p.hour}시</text>`).join('');
       return`<svg viewBox="0 0 ${W} ${H+8}" width="100%" style="display:block;margin-top:6px;"><polyline points="${xs.map((x,i)=>`${x},${ys[i]}`).join(' ')}" fill="none" stroke="rgba(240,192,96,0.5)" stroke-width="1.5" stroke-linejoin="round"/>${dots}</svg>`;
     }
