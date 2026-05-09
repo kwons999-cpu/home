@@ -96,7 +96,7 @@ body.desktop .modal-handle{display:none;}
 
 /* ════════ 모바일 ════════ */
 body.mobile .gateway{max-width:480px;margin:0 auto;padding:env(safe-area-inset-top,16px) 16px calc(env(safe-area-inset-bottom,0px) + 80px);}
-body.mobile .clock-layer{text-align:center;padding:20px 0 14px;margin-top:1.5rem;}
+body.mobile .clock-layer{text-align:center;padding:20px 0 14px;}
 body.mobile #clock-date{font-size:clamp(12px,3.5vw,15px);letter-spacing:0.3px;}
 body.mobile #clock-time{font-size:clamp(26px,11vw,46px);gap:0;line-height:1;}
 body.mobile .search-layer{margin-bottom:10px;}
@@ -412,7 +412,6 @@ async function loadWeather(){
     function makeTempChart(points){
       if(!points.length)return'';
       const W=130,H=70,pad=12;
-      const temps=points.map(p=>p.temp);
       const mn=Math.min(...temps),mx=Math.max(...temps);
       const range=mx-mn||1;
       const xs=points.map((_,i)=>pad+i*(W-pad*2)/(points.length-1||1));
@@ -423,7 +422,7 @@ async function loadWeather(){
       return`<svg viewBox="0 0 ${W} ${H+16}" width="100%" style="display:block;margin-top:4px;"><path d="${path}" fill="none" stroke="rgba(240,192,96,0.5)" stroke-width="1.5"/>${dots}</svg>`;
     }
 
-    let html=`<div class="weather-scroll"><div class="wx-card today" style="min-width:${isMobile?'160px':'180px'};max-width:${isMobile?'200px':'220px'};"><div style="display:flex;align-items:center;gap:10px;width:100%;"><div style="display:flex;flex-direction:column;align-items:center;gap:4px;min-width:82px;"><div style="color:#8890aa;font-size:11px;white-space:nowrap;">${now.getMonth()+1}/${now.getDate()} (${DAY_KR[now.getDay()]})</div><div style="width:53px;height:53px;">${getWxSvg(c.weathercode)}</div><div style="font-size:18px;font-weight:700;color:#f0f2f8;">${Math.round(c.temperature_2m)}°C</div><div style="font-size:10px;">${diffStr}</div><div style="font-size:10px;display:flex;gap:6px;justify-content:center;white-space:nowrap;"><span>☂️${todayRain}%</span>${todayHum!==null?`<span>💧${todayHum}%</span>`:''}</div></div><div style="flex:1;min-width:0;">${makeTempChart(chartPoints)}</div></div></div>`;
+    let html=`<div class="weather-scroll"><div class="wx-card today" style="min-width:${isMobile?'234px':'234px'};max-width:${isMobile?'286px':'286px'};"><div style="display:flex;align-items:center;gap:10px;width:100%;"><div style="display:flex;flex-direction:column;align-items:center;gap:4px;min-width:82px;"><div style="color:#8890aa;font-size:11px;white-space:nowrap;">${now.getMonth()+1}/${now.getDate()} (${DAY_KR[now.getDay()]})</div><div style="width:53px;height:53px;">${getWxSvg(c.weathercode)}</div><div style="font-size:18px;font-weight:700;color:#f0f2f8;">${Math.round(c.temperature_2m)}°C</div><div style="font-size:10px;">${diffStr}</div><div style="font-size:10px;display:flex;gap:6px;justify-content:center;white-space:nowrap;"><span>☂️${todayRain}%</span>${todayHum!==null?`<span>💧${todayHum}%</span>`:''}</div></div><div style="flex:1;min-width:0;">${makeTempChart(chartPoints)}</div></div></div>`;
 
     const startIdx=dl.time.findIndex(t=>t>todayStr);
     for(let i=startIdx;i<startIdx+7&&i<dl.time.length;i++){
