@@ -412,6 +412,7 @@ async function loadWeather(){
     function makeTempChart(points){
       if(!points.length)return'';
       const W=130,H=70,pad=12;
+      const temps=points.map(p=>p.temp);
       const mn=Math.min(...temps),mx=Math.max(...temps);
       const range=mx-mn||1;
       const xs=points.map((_,i)=>pad+i*(W-pad*2)/(points.length-1||1));
@@ -437,7 +438,9 @@ async function loadWeather(){
     }
     html+=`</div>`;
     el.innerHTML=html;
-  }catch(e){el.innerHTML='<div class="weather-loading">날씨를 불러오지 못했습니다.</div>';}
+  }catch(e){
+    el.innerHTML=`<div class="weather-loading">날씨를 불러오지 못했습니다.<br><small style="color:#445;font-size:10px;">${e.message||e}</small></div>`;
+  }
 }
 
 renderShortcuts();loadWeather();
