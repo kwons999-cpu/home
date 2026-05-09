@@ -256,7 +256,16 @@ body.mobile .modal-actions button{flex:1;height:44px;border-radius:10px;font-siz
   </div>
 </div>
 
-<div id="toast"></div>
+  <div id="debug-btn" style="position:fixed;bottom:20px;right:16px;z-index:999;">
+    <button onclick="
+      const w=window.innerWidth;
+      const ua=navigator.userAgent;
+      const cls=document.body.className;
+      const grid=document.getElementById('shortcuts-grid');
+      const cols=getComputedStyle(grid).gridTemplateColumns;
+      alert('클래스: '+cls+'\n화면폭: '+w+'px\n그리드: '+cols+'\nUA: '+ua.slice(0,60));
+    " style="background:#4285F4;color:#fff;border:none;border-radius:20px;padding:8px 14px;font-size:12px;cursor:pointer;">진단</button>
+  </div>
 
 <div class="modal-overlay" id="add-modal">
   <div class="modal-box">
