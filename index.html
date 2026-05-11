@@ -286,9 +286,17 @@ let editMode=false,dragSrc=null,dragMoved=false;
 let touchStartEl=null,touchStartIdx=null,touchTimer=null;
 
 function openTab(url){
-  /* 모바일에서도 앱으로 넘어가지 않도록 http(s) URL 강제 + noopener */
   if(!url.startsWith('http'))url='https://'+url;
-  window.open(url,'_blank','noopener,noreferrer');
+  /* 모바일 Edge 등에서 구글/네이버 앱이 인터셉트하는 문제 방지:
+     <a> 태그를 동적으로 생성해 click() — 브라우저가 새 탭으로 처리 */
+  const a=document.createElement('a');
+  a.href=url;
+  a.target='_blank';
+  a.rel='noopener noreferrer';
+  a.style.display='none';
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(()=>document.body.removeChild(a),300);
 }
 
 function renderShortcuts(){
