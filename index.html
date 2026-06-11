@@ -534,11 +534,11 @@ async function loadWeather(){
     const curHum=parseInt(curSlot.REH||0);
     const curRain=parseInt(curSlot.POP||0);
 
-    /* 시간별 차트 (현재부터 1시간 간격, 최대 6포인트) */
+    /* 시간별 차트 (현재부터 1시간 간격, 최대 11포인트 = 현재~+10h) */
     const chartPts=[];
     const nowMs=now.getTime();
     for(const s of slots){
-      if(chartPts.length>=6) break;
+      if(chartPts.length>=11) break;
       const h=parseInt(s.time.slice(0,2));
       const slotMs=new Date(parseInt(s.date.slice(0,4)),parseInt(s.date.slice(4,6))-1,parseInt(s.date.slice(6,8)),h).getTime();
       if(slotMs>=nowMs-1800000)
@@ -558,33 +558,36 @@ async function loadWeather(){
     const todayKey=padDate(now);
     const futureDays=Object.keys(dayMap).filter(dk=>dk>todayKey).sort();
 
-    /* 차트 SVG */
+    /* 차트 SVG — 포인트당 고정 간격 26px, 6포인트 기준 폭 유지 */
     function makeTempChart(pts){
       if(!pts.length) return '';
-      const W=130,H=70,pad=14;
+      const STEP=26, pad=14, H=70;
+      const W=pad + (pts.length-1)*STEP + pad;
       const temps=pts.map(p=>p.temp);
       const mn=Math.min(...temps),mx=Math.max(...temps),range=mx-mn||1;
-      const xs=pts.map((_,i)=>pad+i*(W-pad*2)/(pts.length-1||1));
+      const xs=pts.map((_,i)=>pad+i*STEP);
       const ys=pts.map(p=>H-14-((p.temp-mn)/range)*(H-32));
       let path=`M${xs[0]},${ys[0]}`;
       for(let i=1;i<xs.length;i++) path+=` L${xs[i]},${ys[i]}`;
       const dots=pts.map((p,i)=>`<circle cx="${xs[i]}" cy="${ys[i]}" r="3" fill="#f0c060"/><text x="${xs[i]}" y="${ys[i]-7}" text-anchor="middle" font-size="9" fill="#f0f2f8" font-family="sans-serif">${p.temp}°</text><text x="${xs[i]}" y="${H+2}" text-anchor="middle" font-size="8" fill="#8890aa" font-family="sans-serif">${p.hour}시</text><text x="${xs[i]}" y="${H+12}" text-anchor="middle" font-size="8" fill="#7baaf7" font-family="sans-serif">${p.rain>0?p.rain+'%':''}</text>`).join('');
-      return `<svg viewBox="0 0 ${W} ${H+16}" width="100%" style="display:block;margin-top:4px;"><path d="${path}" fill="none" stroke="rgba(240,192,96,0.5)" stroke-width="1.5"/>${dots}</svg>`;
+      return `<svg viewBox="0 0 ${W} ${H+16}" width="100%" style="display:block;margin-top:4px;overflow:visible;"><path d="${path}" fill="none" stroke="rgba(240,192,96,0.5)" stroke-width="1.5"/>${dots}</svg>`;
     }
 
-    /* HTML 조립 */
-    const wxClick=`<span class="wx-img-link" title="기상청 날씨" onclick="openTab('https://www.weather.go.kr/w/index.do')">${kmaCode2Svg(curSky,curPty)}</span>`;
+    /* HTML 조립 — 오늘 카드 너비를 차트 포인트 수에 맞게 동적 계산 */
+    const STEP=26, pad=14;
+    const chartW=pad+(chartPts.length-1)*STEP+pad; // SVG와 동일한 계산
+    const cardMinW=Math.max(234, 82+10+chartW+24);  // 왼쪽 정보(82)+gap(10)+차트+여백
     let html=`<div class="weather-scroll">
-      <div class="wx-card today" style="min-width:234px;max-width:286px;">
+      <div class="wx-card today" style="min-width:${cardMinW}px;max-width:none;flex-shrink:0;">
         <div style="display:flex;align-items:center;gap:10px;width:100%;">
-          <div style="display:flex;flex-direction:column;align-items:center;gap:4px;min-width:82px;">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:4px;min-width:82px;flex-shrink:0;">
             <div style="color:#8890aa;font-size:11px;white-space:nowrap;">${now.getMonth()+1}/${now.getDate()} (${DAY_KR[now.getDay()]})</div>
             <div style="width:53px;height:53px;">${wxClick}</div>
             <div style="font-size:18px;font-weight:700;color:#f0f2f8;">${curTemp}°C</div>
             <div style="font-size:10px;color:#8890aa;">${kmaCode2Desc(curSky,curPty)}</div>
             <div style="font-size:10px;display:flex;gap:6px;justify-content:center;white-space:nowrap;"><span>☂️${curRain}%</span><span>💧${curHum}%</span></div>
           </div>
-          <div style="flex:1;min-width:0;">${makeTempChart(chartPts)}</div>
+          <div style="flex:1;min-width:${chartW}px;overflow-x:auto;">${makeTempChart(chartPts)}</div>
         </div>
       </div>`;
 
