@@ -32,7 +32,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .shortcut-add .shortcut-icon{background:rgba(34,37,58,0.6);border-style:dashed;border-color:rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;}
 .wx-card{display:flex;flex-direction:column;align-items:center;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.05);}
 .wx-card.today{background:rgba(66,133,244,0.13);border-color:rgba(66,133,244,0.28);}
-/* 날씨 이미지 클릭 커서 */
 .wx-img-link{cursor:pointer;display:block;width:53px;height:53px;transition:opacity 0.15s;}
 .wx-img-link:hover{opacity:0.8;}
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.68);z-index:200;}
@@ -44,8 +43,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .modal-actions .btn-confirm{background:#4285F4;color:#fff;border-color:#4285F4;}
 #toast{position:fixed;bottom:32px;left:50%;transform:translateX(-50%);background:rgba(30,33,50,0.97);color:#c0c8e0;border:1px solid rgba(255,255,255,0.12);z-index:999;white-space:nowrap;transition:opacity 0.3s;opacity:0;pointer-events:none;padding:9px 18px;border-radius:10px;font-size:12px;}
 .drag-over .shortcut-icon{box-shadow:0 0 0 2.5px #4285F4 !important;}
-.drag-active .shortcut-icon{opacity:0.5;transform:scale(0.92);}
-/* X 버튼 공통 */
 .input-clear{display:none;background:none;border:none;cursor:pointer;color:#556;font-size:16px;line-height:1;padding:0 6px;flex-shrink:0;transition:color 0.15s;}
 .input-clear:hover{color:#aab0c8;}
 .input-clear.visible{display:flex;align-items:center;justify-content:center;}
@@ -91,7 +88,7 @@ body.desktop .bottom-col{display:flex;flex-direction:column;gap:16px;}
 body.desktop .weather-layer{padding:1.1rem 0;position:relative;}
 body.desktop .weather-scroll{display:flex;gap:10px;overflow-x:auto;padding-bottom:4px;max-width:100%;justify-content:center;}
 body.desktop .wx-card{border-radius:14px;padding:12px 6px 10px;min-width:63px;max-width:98px;flex:1;}
-body.desktop .wx-card.today{min-width:180px;max-width:220px;}
+body.desktop .wx-card.today{min-width:180px;max-width:none;}
 body.desktop .weather-loading{padding:2rem 0;color:#556;font-size:13px;text-align:center;line-height:1.8;}
 body.desktop .modal-overlay{align-items:center;justify-content:center;}
 body.desktop .modal-box{background:#1a1d26;border-radius:18px;padding:1.75rem;width:360px;border:1px solid #2e3245;box-shadow:0 8px 40px rgba(0,0,0,0.4);}
@@ -146,7 +143,7 @@ body.mobile .weather-layer{padding:12px 8px;position:relative;}
 body.mobile .weather-scroll{display:flex;gap:5px;overflow-x:auto;padding-bottom:4px;}
 body.mobile .weather-scroll::-webkit-scrollbar{height:0;}
 body.mobile .wx-card{border-radius:10px;padding:8px 6px 7px;min-width:96px;flex:1;}
-body.mobile .wx-card.today{min-width:160px;max-width:200px;}
+body.mobile .wx-card.today{min-width:160px;max-width:none;}
 body.mobile .weather-loading{padding:1.5rem 0;color:#556;font-size:13px;text-align:center;line-height:1.8;}
 body.mobile .modal-overlay{align-items:flex-end;justify-content:center;}
 body.mobile .modal-box{background:#1a1d26;border-radius:20px 20px 0 0;padding:20px 20px calc(env(safe-area-inset-bottom,0px) + 20px);width:100%;border-top:1px solid #2e3245;}
@@ -243,10 +240,8 @@ document.getElementById('search-mobile').style.display=isMobile?'':'none';
 document.getElementById('ai-mobile').style.display=isMobile?'':'none';
 if(!isMobile)document.getElementById('edit-toggle').style.display='none';
 
-/* ── 검색창 X 버튼 ── */
-function setupClear(inputId, clearId){
-  const inp=document.getElementById(inputId);
-  const btn=document.getElementById(clearId);
+function setupClear(inputId,clearId){
+  const inp=document.getElementById(inputId),btn=document.getElementById(clearId);
   if(!inp||!btn)return;
   inp.addEventListener('input',()=>btn.classList.toggle('visible',inp.value.length>0));
   btn.addEventListener('click',()=>{inp.value='';btn.classList.remove('visible');inp.focus();});
@@ -255,59 +250,41 @@ setupClear('sq-d','clear-d');
 setupClear('sq-m','clear-m');
 
 const SITE_ICONS={
-  /* 네이버 — 초록 배경에 공식 N 워드마크 */
   naver:`<svg viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg"><rect width="50" height="50" rx="11" fill="#03C75A"/><path d="M13 13h8.6l9.8 14.2V13H37v24h-8.6L18.6 22.8V37H13z" fill="white"/></svg>`,
-  /* 구글 — 흰 배경에 정확한 G 로고 */
   google:`<svg viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg"><rect width="50" height="50" rx="11" fill="white" stroke="#e0e0e0" stroke-width="1"/><path d="M38.5 25.2c0-.9-.1-1.8-.2-2.7H25v5.1h7.6c-.3 1.7-1.4 3.2-2.9 4.1v3.4h4.7c2.8-2.5 4.1-6.3 4.1-9.9z" fill="#4285F4"/><path d="M25 39c3.8 0 7-1.3 9.3-3.4l-4.7-3.4c-1.3.8-2.9 1.3-4.6 1.3-3.5 0-6.5-2.4-7.6-5.6H12.6v3.5C14.9 36.1 19.7 39 25 39z" fill="#34A853"/><path d="M17.4 27.9c-.3-.8-.4-1.6-.4-2.4s.1-1.7.4-2.4v-3.5h-4.8C11.3 21.4 11 23.2 11 25s.3 3.6 1.6 5.4l4.8-2.5z" fill="#FBBC05"/><path d="M25 17c2 0 3.8.7 5.2 2l3.8-3.8C31.9 13 28.8 11.5 25 11.5c-5.3 0-10.1 2.9-12.4 7.5l4.8 3.5C18.5 19.4 21.5 17 25 17z" fill="#EA4335"/></svg>`,
-  /* 서강대 메일 — 서강대 상징색 크림슨, 공식 이니셜 SU */
   sogang:`<svg viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="sg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#A31621"/><stop offset="100%" stop-color="#7A0E18"/></linearGradient></defs><rect width="50" height="50" rx="11" fill="url(#sg)"/><path d="M16 20c0-2.2 1.8-4 4-4h2c2.2 0 4 1.8 4 4v1.5c0 1-.8 1.8-1.8 1.8s-1.8-.8-1.8-1.8V20.5c0-.3-.2-.5-.5-.5h-2c-.3 0-.5.2-.5.5v3c0 .3.2.5.5.5h2c2.2 0 4 1.8 4 4v1.5c0 2.2-1.8 4-4 4h-2c-2.2 0-4-1.8-4-4v-1.5c0-1 .8-1.8 1.8-1.8s1.8.8 1.8 1.8v1c0 .3.2.5.5.5h2c.3 0 .5-.2.5-.5v-3c0-.3-.2-.5-.5-.5h-2c-2.2 0-4-1.8-4-4V20z" fill="white"/><path d="M28 16h3.5v11.5c0 .3.2.5.5.5s.5-.2.5-.5V16H36v11.5c0 2.2-1.8 4-4 4s-4-1.8-4-4V16z" fill="white"/></svg>`,
-  /* Gmail — 공식 M 엔벨로프 로고 */
   gmail:`<svg viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg"><rect width="50" height="50" rx="11" fill="white" stroke="#e0e0e0" stroke-width="1"/><path d="M9 15h32v22H9z" fill="#f1f3f4"/><path d="M9 15l16 12 16-12" fill="none" stroke="white" stroke-width="1.5"/><path d="M9 15v22h5V22.5L25 31l11-8.5V37h5V15L25 27z" fill="white"/><path d="M9 15l16 12 16-12H9z" fill="#EA4335"/><path d="M9 15v22h5V22.5L9 15zm32 0v22h-5V22.5L41 15z" fill="#C5221F"/></svg>`,
-  /* 한솔에코 — 파란 계열 브랜드, H 레터마크 */
   hansol:`<svg viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="hg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#1D6FA4"/><stop offset="100%" stop-color="#0D4A75"/></linearGradient></defs><rect width="50" height="50" rx="11" fill="url(#hg)"/><path d="M13 12h5.5v10h9V12H33v26h-5.5V27h-9v11H13z" fill="white"/><circle cx="36" cy="36" r="6" fill="#2CC84D"/><path d="M33.5 36l2 2 4-4" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>`,
-  /* 네이버 캘린더 — 네이버 그린 + 캘린더 */
   calendar:`<svg viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg"><rect width="50" height="50" rx="11" fill="white" stroke="#e0e0e0" stroke-width="1"/><rect x="8" y="14" width="34" height="28" rx="4" fill="white" stroke="#dadce0" stroke-width="1.5"/><rect x="8" y="14" width="34" height="10" rx="4" fill="#03C75A"/><rect x="8" y="20" width="34" height="4" fill="#03C75A"/><rect x="16" y="8" width="4" height="10" rx="2" fill="#03C75A"/><rect x="30" y="8" width="4" height="10" rx="2" fill="#03C75A"/><text x="25" y="38" font-size="12" font-weight="900" font-family="Arial Black,sans-serif" text-anchor="middle" fill="#03C75A">11</text></svg>`,
-  /* 구글 드라이브 — 공식 삼각형 3색 로고 */
   gdrive:`<svg viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg"><rect width="50" height="50" rx="11" fill="white" stroke="#e0e0e0" stroke-width="1"/><path d="M25 9l10 17H15z" fill="#4285F4"/><path d="M7 37h14l5-8H12z" fill="#34A853"/><path d="M29 37h14L33 21l-5 8-4 8z" fill="#FBBC05"/></svg>`,
-  /* 네이버 증권 — 네이버 그린 + 상승 차트 */
   nfinance:`<svg viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg"><rect width="50" height="50" rx="11" fill="#03C75A"/><polyline points="9,36 17,26 23,31 31,19 41,23" fill="none" stroke="white" stroke-width="2.8" stroke-linejoin="round" stroke-linecap="round"/><polyline points="31,19 41,19 41,29" fill="none" stroke="white" stroke-width="2.8" stroke-linejoin="round" stroke-linecap="round"/></svg>`,
-  /* 네이버 지도 — 네이버 그린 + 위치 핀 */
   nmap:`<svg viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg"><rect width="50" height="50" rx="11" fill="#03C75A"/><path d="M25 8c-7 0-12 5.6-12 12.5 0 9.5 12 22.5 12 22.5s12-13 12-22.5C37 13.6 32 8 25 8zm0 16.5a4.5 4.5 0 110-9 4.5 4.5 0 010 9z" fill="white"/></svg>`,
-  /* 구글 지도 — 흰 배경 + 공식 핀 컬러 */
   gmap:`<svg viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg"><rect width="50" height="50" rx="11" fill="white" stroke="#e0e0e0" stroke-width="1"/><path d="M25 7c-7.2 0-13 5.8-13 13 0 10 13 24 13 24s13-14 13-24c0-7.2-5.8-13-13-13z" fill="#EA4335"/><circle cx="25" cy="20" r="5.5" fill="white"/><ellipse cx="25" cy="43" rx="7" ry="2.5" fill="#34A853" opacity="0.35"/></svg>`,
-  /* GitHub — 공식 옥토캣 + 다크 배경 */
   github:`<svg viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg"><rect width="50" height="50" rx="11" fill="#161B22"/><path fill-rule="evenodd" clip-rule="evenodd" d="M25 8.5a17 17 0 00-5.37 33.14c.85.16 1.16-.37 1.16-.82l-.02-3.18c-4.72 1.03-5.71-2.28-5.71-2.28-.77-1.96-1.88-2.48-1.88-2.48-1.54-1.05.12-1.03.12-1.03 1.7.12 2.6 1.75 2.6 1.75 1.51 2.6 3.97 1.85 4.94 1.41.15-1.1.59-1.85 1.07-2.27-3.77-.43-7.73-1.89-7.73-8.4 0-1.85.66-3.37 1.74-4.56-.17-.43-.75-2.15.17-4.49 0 0 1.42-.46 4.67 1.74a16.25 16.25 0 018.5 0c3.25-2.2 4.67-1.74 4.67-1.74.92 2.34.34 4.06.17 4.49 1.08 1.19 1.74 2.71 1.74 4.56 0 6.53-3.97 7.96-7.75 8.38.61.52 1.15 1.56 1.15 3.15l-.02 4.67c0 .45.3.98 1.16.82A17 17 0 0025 8.5z" fill="white"/></svg>`,
 };
 const EMOJI_FALLBACK=['🌟','📌','🔖','💡','🎯','⚡','🌈','🔥','📎','🗂'];
 const DEFAULT_SHORTCUTS=[
-  {name:"네이버",  url:"https://www.naver.com/",                    iconKey:"naver"},
-  {name:"구글",   url:"https://www.google.com/",                   iconKey:"google"},
-  {name:"서강메일",url:"https://mail.sogang.ac.kr/",                iconKey:"sogang"},
-  {name:"지메일", url:"https://mail.google.com/",                  iconKey:"gmail"},
-  {name:"한솔에코",url:"https://echo.hansol.com/",                  iconKey:"hansol"},
-  {name:"캘린더", url:"https://calendar.naver.com/",               iconKey:"calendar"},
-  {name:"구글독스",url:"https://docs.google.com/spreadsheets/u/0/", iconKey:"gdrive"},
-  {name:"네이버증권",url:"https://finance.naver.com/",              iconKey:"nfinance"},
-  {name:"네이버지도",url:"https://map.naver.com/p/",                iconKey:"nmap"},
-  {name:"구글지도",url:"https://www.google.co.kr/maps",             iconKey:"gmap"},
-  {name:"깃허브", url:"https://github.com/",                       iconKey:"github"},
+  {name:"네이버",   url:"https://www.naver.com/",                    iconKey:"naver"},
+  {name:"구글",    url:"https://www.google.com/",                   iconKey:"google"},
+  {name:"서강메일", url:"https://mail.sogang.ac.kr/",                iconKey:"sogang"},
+  {name:"지메일",  url:"https://mail.google.com/",                  iconKey:"gmail"},
+  {name:"한솔에코", url:"https://echo.hansol.com/",                  iconKey:"hansol"},
+  {name:"캘린더",  url:"https://calendar.naver.com/",               iconKey:"calendar"},
+  {name:"구글독스", url:"https://docs.google.com/spreadsheets/u/0/", iconKey:"gdrive"},
+  {name:"네이버증권",url:"https://finance.naver.com/",               iconKey:"nfinance"},
+  {name:"네이버지도",url:"https://map.naver.com/p/",                 iconKey:"nmap"},
+  {name:"구글지도", url:"https://www.google.co.kr/maps",             iconKey:"gmap"},
+  {name:"깃허브",  url:"https://github.com/",                       iconKey:"github"},
 ];
 
 let shortcuts=[...DEFAULT_SHORTCUTS];
 let editMode=false,dragSrc=null,dragMoved=false;
-let touchStartEl=null,touchStartIdx=null,touchTimer=null;
 
 function openTab(url){
   if(!url.startsWith('http'))url='https://'+url;
-  /* 모바일 Edge 등에서 구글/네이버 앱이 인터셉트하는 문제 방지:
-     <a> 태그를 동적으로 생성해 click() — 브라우저가 새 탭으로 처리 */
   const a=document.createElement('a');
-  a.href=url;
-  a.target='_blank';
-  a.rel='noopener noreferrer';
-  a.style.display='none';
-  document.body.appendChild(a);
-  a.click();
+  a.href=url;a.target='_blank';a.rel='noopener noreferrer';a.style.display='none';
+  document.body.appendChild(a);a.click();
   setTimeout(()=>document.body.removeChild(a),300);
 }
 
@@ -317,16 +294,14 @@ function renderShortcuts(){
   if(isMobile){editMode?grid.classList.add('edit-mode'):grid.classList.remove('edit-mode');}
   shortcuts.forEach((s,i)=>{
     const el=document.createElement('div');
-    el.className='shortcut-item';
-    el.dataset.index=i;
-    el.draggable=true;
+    el.className='shortcut-item';el.dataset.index=i;el.draggable=true;
     const ih=s.iconKey&&SITE_ICONS[s.iconKey]?SITE_ICONS[s.iconKey]
       :`<svg viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg"><rect width="50" height="50" fill="#22253a"/><text x="25" y="33" font-size="22" text-anchor="middle">${s.emoji||'🌐'}</text></svg>`;
     el.innerHTML=`<div class="shortcut-wrap"><div class="shortcut-icon">${ih}</div><button class="del-btn" aria-label="${s.name} 삭제">✕</button></div><div class="shortcut-label">${s.name}</div>`;
     el.querySelector('.shortcut-icon').addEventListener('click',()=>{
       if(isMobile&&editMode)return;
       if(dragMoved)return;
-      openTab(s.url); /* ④ 새탭, 앱 이동 방지 */
+      openTab(s.url);
     });
     el.querySelector('.del-btn').addEventListener('click',e=>{e.stopPropagation();if(confirm(`"${s.name}" 삭제할까요?`)){shortcuts.splice(i,1);renderShortcuts();}});
     el.addEventListener('dragstart',e=>{if(isMobile)return;dragSrc=i;el.style.opacity='0.4';e.dataTransfer.effectAllowed='move';});
@@ -362,43 +337,23 @@ function updateClock(){
 setInterval(updateClock,1000);updateClock();
 
 function getQuery(){return document.getElementById(isMobile?'sq-m':'sq-d').value.trim();}
-
 document.getElementById('sq-d').addEventListener('keydown',e=>{if(e.key==='Enter')doSearch('naver');});
 document.getElementById('sq-m').addEventListener('keydown',e=>{if(e.key==='Enter')doSearch('naver');});
 
-/* ③ 검색어 없으면 대표 페이지 열기 */
-const HOME_URLS={
-  naver:'https://www.naver.com/',
-  google:'https://www.google.com/',
-  chatgpt:'https://chatgpt.com/',
-  gemini:'https://gemini.google.com/app',
-  claude:'https://claude.ai/',
-  perplexity:'https://www.perplexity.ai/'
-};
+const HOME_URLS={naver:'https://www.naver.com/',google:'https://www.google.com/',chatgpt:'https://chatgpt.com/',gemini:'https://gemini.google.com/app',claude:'https://claude.ai/',perplexity:'https://www.perplexity.ai/'};
 
 function doSearch(engine){
   const q=getQuery();
   if(!q){openTab(HOME_URLS[engine]);return;}
   openTab((engine==='naver'?'https://search.naver.com/search.naver?query=':'https://www.google.com/search?q=')+encodeURIComponent(q));
 }
-
 function doAI(ai){
   const q=getQuery();
   if(!q){openTab(HOME_URLS[ai]);return;}
-  if(ai==='gemini'){
-    navigator.clipboard.writeText(q).catch(()=>{});
-    openTab('https://gemini.google.com/app');
-    showToast('질문이 클립보드에 복사됐습니다. Ctrl+V로 붙여넣기 해주세요.');
-    return;
-  }
-  const urls={
-    chatgpt:`https://chatgpt.com/?q=${encodeURIComponent(q)}&hints=search&ref=ext`,
-    claude:`https://claude.ai/new?q=${encodeURIComponent(q)}`,
-    perplexity:`https://www.perplexity.ai/search?q=${encodeURIComponent(q)}&focus=internet`
-  };
+  if(ai==='gemini'){navigator.clipboard.writeText(q).catch(()=>{});openTab('https://gemini.google.com/app');showToast('질문이 클립보드에 복사됐습니다. Ctrl+V로 붙여넣기 해주세요.');return;}
+  const urls={chatgpt:`https://chatgpt.com/?q=${encodeURIComponent(q)}&hints=search&ref=ext`,claude:`https://claude.ai/new?q=${encodeURIComponent(q)}`,perplexity:`https://www.perplexity.ai/search?q=${encodeURIComponent(q)}&focus=internet`};
   openTab(urls[ai]);
 }
-
 function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.style.opacity='1';clearTimeout(t._tid);t._tid=setTimeout(()=>{t.style.opacity='0';},3500);}
 
 function closeModal(){document.getElementById('add-modal').classList.remove('show');document.getElementById('new-name').value='';document.getElementById('new-url').value='';}
@@ -427,14 +382,8 @@ const WX_SVG={
   fog:`<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="fg1" cx="32%" cy="26%"><stop offset="0%" stop-color="#e8f4ff"/><stop offset="55%" stop-color="#bcd8f2"/><stop offset="100%" stop-color="#88b8e0"/></radialGradient></defs><ellipse cx="32" cy="26" rx="21" ry="10" fill="url(#fg1)"/><ellipse cx="21" cy="21" rx="14" ry="11" fill="url(#fg1)"/><ellipse cx="36" cy="20" rx="15" ry="11" fill="url(#fg1)"/><g stroke="#b0c8e0" stroke-width="2.5" stroke-linecap="round"><line x1="8" y1="40" x2="52" y2="40"/><line x1="10" y1="48" x2="50" y2="48"/><line x1="14" y1="56" x2="46" y2="56"/></g></svg>`,
 };
 
-
-/* ── 기상청 API 설정 ── */
-const KMA_KEY = '450c1bfeb51231084fdd9fdd738a0a9ead992a94c641a1c03cee1c8d5305f0bf';
-
-
-
-/* SKY: 1맑음 3구름많음 4흐림 / PTY: 0없음 1비 2비/눈 3눈 4소나기 */
-function kmaCode2Svg(sky, pty){
+/* SKY: 1맑음 3구름많음 4흐림 / PTY: 0없음 1비 2비눈 3눈 4소나기 */
+function kmaCode2Svg(sky,pty){
   if(pty===1||pty===4) return WX_SVG.rain;
   if(pty===2)          return WX_SVG.rain;
   if(pty===3)          return WX_SVG.snow;
@@ -442,7 +391,7 @@ function kmaCode2Svg(sky, pty){
   if(sky===3)          return WX_SVG.partcloud;
   return WX_SVG.overcast;
 }
-function kmaCode2Desc(sky, pty){
+function kmaCode2Desc(sky,pty){
   if(pty===1) return '비';
   if(pty===2) return '비/눈';
   if(pty===3) return '눈';
@@ -453,36 +402,36 @@ function kmaCode2Desc(sky, pty){
 }
 
 /* 위경도 → 기상청 격자 변환 */
-function latLon2Grid(lat, lon){
-  const RE=6371.00877, GRID=5.0, SLAT1=30.0, SLAT2=60.0, OLON=126.0, OLAT=38.0, XO=43, YO=136;
+function latLon2Grid(lat,lon){
+  const RE=6371.00877,GRID=5.0,SLAT1=30.0,SLAT2=60.0,OLON=126.0,OLAT=38.0,XO=43,YO=136;
   const DEGRAD=Math.PI/180;
-  const re=RE/GRID, slat1=SLAT1*DEGRAD, slat2=SLAT2*DEGRAD, olon=OLON*DEGRAD, olat=OLAT*DEGRAD;
+  const re=RE/GRID,slat1=SLAT1*DEGRAD,slat2=SLAT2*DEGRAD,olon=OLON*DEGRAD,olat=OLAT*DEGRAD;
   let sn=Math.tan(Math.PI*0.25+slat2*0.5)/Math.tan(Math.PI*0.25+slat1*0.5);
   sn=Math.log(Math.cos(slat1)/Math.cos(slat2))/Math.log(sn);
-  let sf=Math.tan(Math.PI*0.25+slat1*0.5); sf=Math.pow(sf,sn)*Math.cos(slat1)/sn;
-  let ro=Math.tan(Math.PI*0.25+olat*0.5); ro=re*sf/Math.pow(ro,sn);
-  let ra=Math.tan(Math.PI*0.25+lat*DEGRAD*0.5); ra=re*sf/Math.pow(ra,sn);
-  let theta=lon*DEGRAD-olon; if(theta>Math.PI)theta-=2*Math.PI; if(theta<-Math.PI)theta+=2*Math.PI;
+  let sf=Math.tan(Math.PI*0.25+slat1*0.5);sf=Math.pow(sf,sn)*Math.cos(slat1)/sn;
+  let ro=Math.tan(Math.PI*0.25+olat*0.5);ro=re*sf/Math.pow(ro,sn);
+  let ra=Math.tan(Math.PI*0.25+lat*DEGRAD*0.5);ra=re*sf/Math.pow(ra,sn);
+  let theta=lon*DEGRAD-olon;if(theta>Math.PI)theta-=2*Math.PI;if(theta<-Math.PI)theta+=2*Math.PI;
   theta*=sn;
-  return {nx:Math.floor(ra*Math.sin(theta)+XO+0.5), ny:Math.floor(ro-ra*Math.cos(theta)+YO+0.5)};
+  return{nx:Math.floor(ra*Math.sin(theta)+XO+0.5),ny:Math.floor(ro-ra*Math.cos(theta)+YO+0.5)};
 }
 
-/* base_date / base_time 계산 (단기예보 발표: 0200,0500,0800,1100,1400,1700,2000,2300) */
+/* base_date / base_time 계산 */
 function getBaseDateTime(){
-  const now=new Date();
-  const h=now.getHours();
+  const now=new Date(),h=now.getHours();
   const baseTimes=[2,5,8,11,14,17,20,23];
-  let bt=23, dayOffset=1;
-  for(let i=baseTimes.length-1;i>=0;i--){
-    if(h>=baseTimes[i]+1){bt=baseTimes[i];dayOffset=0;break;}
-  }
-  const d=new Date(now); d.setDate(d.getDate()-dayOffset);
-  const yyyy=d.getFullYear(), mm=String(d.getMonth()+1).padStart(2,'0'), dd=String(d.getDate()).padStart(2,'0');
-  return {base_date:`${yyyy}${mm}${dd}`, base_time:`${String(bt).padStart(2,'0')}00`};
+  let bt=23,dayOffset=1;
+  for(let i=baseTimes.length-1;i>=0;i--){if(h>=baseTimes[i]+1){bt=baseTimes[i];dayOffset=0;break;}}
+  const d=new Date(now);d.setDate(d.getDate()-dayOffset);
+  const yyyy=d.getFullYear(),mm=String(d.getMonth()+1).padStart(2,'0'),dd=String(d.getDate()).padStart(2,'0');
+  return{base_date:`${yyyy}${mm}${dd}`,base_time:`${String(bt).padStart(2,'0')}00`};
 }
 
-function padDate(d){ const m=String(d.getMonth()+1).padStart(2,'0'),dd=String(d.getDate()).padStart(2,'0'); return `${d.getFullYear()}${m}${dd}`; }
+function padDate(d){
+  return `${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}`;
+}
 
+const KMA_KEY='450c1bfeb51231084fdd9fdd738a0a9ead992a94c641a1c03cee1c8d5305f0bf';
 let currentLocation={name:'서울특별시',lat:37.5665,lon:126.9780};
 
 function changeLocation(){
@@ -504,9 +453,9 @@ async function loadWeather(){
   el.innerHTML='<div class="weather-loading">기상청 날씨 불러오는 중...</div>';
   document.getElementById('location-label').textContent=currentLocation.name;
   try{
-    const {lat,lon}=currentLocation;
-    const {nx,ny}=latLon2Grid(lat,lon);
-    const {base_date,base_time}=getBaseDateTime();
+    const{lat,lon}=currentLocation;
+    const{nx,ny}=latLon2Grid(lat,lon);
+    const{base_date,base_time}=getBaseDateTime();
     const params=new URLSearchParams({serviceKey:KMA_KEY,pageNo:1,numOfRows:1000,dataType:'JSON',base_date,base_time,nx,ny});
     const res=await fetch(`https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst?${params}`);
     const json=await res.json();
@@ -527,14 +476,14 @@ async function loadWeather(){
 
     /* 현재 슬롯 */
     let curSlot=slots[0];
-    for(const s of slots){ if(s.date+s.time<=nowKey)curSlot=s; else break; }
+    for(const s of slots){if(s.date+s.time<=nowKey)curSlot=s;else break;}
     const curTemp=Math.round(parseFloat(curSlot.TMP||0));
     const curSky=parseInt(curSlot.SKY||1);
     const curPty=parseInt(curSlot.PTY||0);
     const curHum=parseInt(curSlot.REH||0);
     const curRain=parseInt(curSlot.POP||0);
 
-    /* 시간별 차트 (현재부터 1시간 간격, 최대 11포인트 = 현재~+10h) */
+    /* 시간별 차트: 현재~+10시간, 1시간 간격, 최대 11포인트 */
     const chartPts=[];
     const nowMs=now.getTime();
     for(const s of slots){
@@ -558,25 +507,27 @@ async function loadWeather(){
     const todayKey=padDate(now);
     const futureDays=Object.keys(dayMap).filter(dk=>dk>todayKey).sort();
 
-    /* 차트 SVG — 포인트당 고정 간격 26px, 6포인트 기준 폭 유지 */
+    /* 차트 SVG — 포인트당 고정 26px 간격 */
     function makeTempChart(pts){
       if(!pts.length) return '';
-      const STEP=26, pad=14, H=70;
-      const W=pad + (pts.length-1)*STEP + pad;
+      const STEP=26,PAD=14,H=70;
+      const W=PAD+(pts.length-1)*STEP+PAD;
       const temps=pts.map(p=>p.temp);
       const mn=Math.min(...temps),mx=Math.max(...temps),range=mx-mn||1;
-      const xs=pts.map((_,i)=>pad+i*STEP);
+      const xs=pts.map((_,i)=>PAD+i*STEP);
       const ys=pts.map(p=>H-14-((p.temp-mn)/range)*(H-32));
       let path=`M${xs[0]},${ys[0]}`;
       for(let i=1;i<xs.length;i++) path+=` L${xs[i]},${ys[i]}`;
       const dots=pts.map((p,i)=>`<circle cx="${xs[i]}" cy="${ys[i]}" r="3" fill="#f0c060"/><text x="${xs[i]}" y="${ys[i]-7}" text-anchor="middle" font-size="9" fill="#f0f2f8" font-family="sans-serif">${p.temp}°</text><text x="${xs[i]}" y="${H+2}" text-anchor="middle" font-size="8" fill="#8890aa" font-family="sans-serif">${p.hour}시</text><text x="${xs[i]}" y="${H+12}" text-anchor="middle" font-size="8" fill="#7baaf7" font-family="sans-serif">${p.rain>0?p.rain+'%':''}</text>`).join('');
-      return `<svg viewBox="0 0 ${W} ${H+16}" width="100%" style="display:block;margin-top:4px;overflow:visible;"><path d="${path}" fill="none" stroke="rgba(240,192,96,0.5)" stroke-width="1.5"/>${dots}</svg>`;
+      return `<svg viewBox="0 0 ${W} ${H+16}" width="${W}" style="display:block;margin-top:4px;"><path d="${path}" fill="none" stroke="rgba(240,192,96,0.5)" stroke-width="1.5"/>${dots}</svg>`;
     }
 
-    /* HTML 조립 — 오늘 카드 너비를 차트 포인트 수에 맞게 동적 계산 */
-    const STEP=26, pad=14;
-    const chartW=pad+(chartPts.length-1)*STEP+pad; // SVG와 동일한 계산
-    const cardMinW=Math.max(234, 82+10+chartW+24);  // 왼쪽 정보(82)+gap(10)+차트+여백
+    /* HTML 조립 */
+    const STEP=26,PAD=14;
+    const chartW=PAD+(chartPts.length-1)*STEP+PAD;
+    const cardMinW=Math.max(234,82+10+chartW+24);
+    const wxClick=`<span class="wx-img-link" title="기상청 날씨" onclick="openTab('https://www.weather.go.kr/w/index.do')">${kmaCode2Svg(curSky,curPty)}</span>`;
+
     let html=`<div class="weather-scroll">
       <div class="wx-card today" style="min-width:${cardMinW}px;max-width:none;flex-shrink:0;">
         <div style="display:flex;align-items:center;gap:10px;width:100%;">
@@ -587,7 +538,7 @@ async function loadWeather(){
             <div style="font-size:10px;color:#8890aa;">${kmaCode2Desc(curSky,curPty)}</div>
             <div style="font-size:10px;display:flex;gap:6px;justify-content:center;white-space:nowrap;"><span>☂️${curRain}%</span><span>💧${curHum}%</span></div>
           </div>
-          <div style="flex:1;min-width:${chartW}px;overflow-x:auto;">${makeTempChart(chartPts)}</div>
+          <div style="overflow-x:auto;">${makeTempChart(chartPts)}</div>
         </div>
       </div>`;
 
@@ -615,7 +566,8 @@ async function loadWeather(){
   }
 }
 
-renderShortcuts();loadWeather();
+renderShortcuts();
+loadWeather();
 </script>
 </body>
 </html>
