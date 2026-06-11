@@ -419,57 +419,7 @@ const WX_SVG={
 /* ── 기상청 API 설정 ── */
 const KMA_KEY = '450c1bfeb51231084fdd9fdd738a0a9ead992a94c641a1c03cee1c8d5305f0bf';
 
-/* 중기예보 육상 지점코드 (위경도 기반 근사 매핑) */
-function getMidLandCode(lat, lon){
-  if(lat>=38.0)                          return '11D20000'; // 중부내륙산지
-  if(lon>=129.0&&lat>=36.5)              return '11H20201'; // 경북북부동해안
-  if(lon>=129.0)                         return '11H20401'; // 경남남해안
-  if(lat>=37.5&&lon>=127.5)              return '11D10301'; // 경기남부
-  if(lat>=37.5)                          return '11B10101'; // 서울·인천·경기
-  if(lat>=36.5&&lon<127.5)               return '11C20101'; // 충남
-  if(lat>=36.5)                          return '11C10301'; // 충북
-  if(lat>=35.5&&lon<127.0)               return '21F20801'; // 전북
-  if(lat>=35.5&&lon<128.5)               return '11F20501'; // 전남서부
-  if(lat>=35.5)                          return '11H10501'; // 경남서부내륙
-  if(lon<126.5)                          return '11F20101'; // 전남서해안
-  if(lon<127.5)                          return '11F20401'; // 광주·전남
-  if(lon<128.5)                          return '11H10201'; // 경남중부내륙
-  return '11H20101'; // 경북
-}
 
-/* 중기기온 지점코드 */
-function getMidTempCode(lat, lon){
-  if(lat>=37.5&&lon<127.5)  return '108'; // 서울
-  if(lat>=37.5)              return '119'; // 수원
-  if(lat>=37.0&&lon<127.0)  return '129'; // 서산
-  if(lat>=37.0)              return '114'; // 원주
-  if(lat>=36.5&&lon<127.5)  return '133'; // 대전
-  if(lat>=36.5)              return '135'; // 추풍령
-  if(lat>=35.8&&lon<127.0)  return '140'; // 군산
-  if(lat>=35.8)              return '136'; // 안동
-  if(lat>=35.5&&lon<127.0)  return '143'; // 전주
-  if(lat>=35.5&&lon<128.5)  return '156'; // 광주
-  if(lat>=35.5)              return '138'; // 포항
-  if(lon<127.0)              return '168'; // 여수
-  if(lon<128.5)              return '159'; // 부산
-  return '155'; // 창원
-}
-
-/* 중기예보 발표 기준시각: 06시 또는 18시 */
-function getMidBaseTime(){
-  const now=new Date();
-  const h=now.getHours();
-  const yyyy=now.getFullYear();
-  const mm=String(now.getMonth()+1).padStart(2,'0');
-  const dd=String(now.getDate()).padStart(2,'0');
-  if(h>=18) return `${yyyy}${mm}${dd}1800`;
-  if(h>=6)  return `${yyyy}${mm}${dd}0600`;
-  // 자정~6시 미만: 전날 18시
-  const prev=new Date(now); prev.setDate(prev.getDate()-1);
-  const pm=String(prev.getMonth()+1).padStart(2,'0');
-  const pd=String(prev.getDate()).padStart(2,'0');
-  return `${prev.getFullYear()}${pm}${pd}1800`;
-}
 
 /* SKY: 1맑음 3구름많음 4흐림 / PTY: 0없음 1비 2비/눈 3눈 4소나기 */
 function kmaCode2Svg(sky, pty){
@@ -545,37 +495,25 @@ async function loadWeather(){
     const {lat,lon}=currentLocation;
     const {nx,ny}=latLon2Grid(lat,lon);
     const {base_date,base_time}=getBaseDateTime();
-    const midBase=getMidBaseTime();
-    const landCode=getMidLandCode(lat,lon);
-    const tempCode=getMidTempCode(lat,lon);
-    const BASE='https://apis.data.go.kr/1360000';
+    const params=new URLSearchParams({serviceKey:KMA_KEY,pageNo:1,numOfRows:1000,dataType:'JSON',base_date,base_time,nx,ny});
+    const res=await fetch(`https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst?${params}`);
+    const json=await res.json();
+    const items=json?.response?.body?.items?.item||[];
+    if(!items.length) throw new Error('데이터 없음');
 
-    /* ── 단기예보 ── */
-    const shortParams=new URLSearchParams({serviceKey:KMA_KEY,pageNo:1,numOfRows:1000,dataType:'JSON',base_date,base_time,nx,ny});
-    /* ── 중기육상예보 (하늘상태·강수확률) ── */
-    const landParams=new URLSearchParams({serviceKey:KMA_KEY,pageNo:1,numOfRows:10,dataType:'JSON',regId:landCode,tmFc:midBase});
-    /* ── 중기기온예보 ── */
-    const tempParams=new URLSearchParams({serviceKey:KMA_KEY,pageNo:1,numOfRows:10,dataType:'JSON',stnIds:tempCode,tmFc:midBase});
-
-    const [shortRes,landRes,tempRes]=await Promise.all([
-      fetch(`${BASE}/VilageFcstInfoService_2.0/getVilageFcst?${shortParams}`),
-      fetch(`${BASE}/MidFcstInfoService/getMidLandFcst?${landParams}`),
-      fetch(`${BASE}/MidFcstInfoService/getMidTa?${tempParams}`)
-    ]);
-    const [shortJson,landJson,tempJson]=await Promise.all([shortRes.json(),landRes.json(),tempRes.json()]);
-
-    /* ── 단기예보 파싱 ── */
-    const items=shortJson?.response?.body?.items?.item||[];
-    if(!items.length) throw new Error('단기예보 데이터 없음');
+    /* 시간별 슬롯 구성 */
     const byTime={};
     items.forEach(({fcstDate,fcstTime,category,fcstValue})=>{
-      const k=`${fcstDate}_${fcstTime}`;
+      const k=`${fcstDate}${fcstTime}`;
       if(!byTime[k])byTime[k]={date:fcstDate,time:fcstTime};
       byTime[k][category]=fcstValue;
     });
     const slots=Object.values(byTime).sort((a,b)=>(a.date+a.time)<(b.date+b.time)?-1:1);
+
     const now=new Date();
     const nowKey=padDate(now)+String(now.getHours()).padStart(2,'0')+'00';
+
+    /* 현재 슬롯 */
     let curSlot=slots[0];
     for(const s of slots){ if(s.date+s.time<=nowKey)curSlot=s; else break; }
     const curTemp=Math.round(parseFloat(curSlot.TMP||0));
@@ -584,56 +522,33 @@ async function loadWeather(){
     const curHum=parseInt(curSlot.REH||0);
     const curRain=parseInt(curSlot.POP||0);
 
-    /* 시간별 차트 (현재부터 2시간 간격 6포인트) */
+    /* 시간별 차트 (현재부터 1시간 간격, 최대 6포인트) */
     const chartPts=[];
     const nowMs=now.getTime();
     for(const s of slots){
+      if(chartPts.length>=6) break;
       const h=parseInt(s.time.slice(0,2));
       const slotMs=new Date(parseInt(s.date.slice(0,4)),parseInt(s.date.slice(4,6))-1,parseInt(s.date.slice(6,8)),h).getTime();
-      if(slotMs<nowMs-1800000||chartPts.length>=6) { if(slotMs>=nowMs-1800000&&chartPts.length<6) chartPts.push({hour:h,temp:Math.round(parseFloat(s.TMP||0)),rain:parseInt(s.POP||0)}); continue; }
-      chartPts.push({hour:h,temp:Math.round(parseFloat(s.TMP||0)),rain:parseInt(s.POP||0)});
+      if(slotMs>=nowMs-1800000)
+        chartPts.push({hour:h,temp:Math.round(parseFloat(s.TMP||0)),rain:parseInt(s.POP||0)});
     }
 
-    /* 단기 일별 집계 */
-    const shortDayMap={};
+    /* 일별 집계 */
+    const dayMap={};
     slots.forEach(s=>{
       const dk=s.date;
-      if(!shortDayMap[dk])shortDayMap[dk]={temps:[],sky:[],pty:[],pop:[]};
-      if(s.TMP) shortDayMap[dk].temps.push(parseFloat(s.TMP));
-      if(s.SKY) shortDayMap[dk].sky.push(parseInt(s.SKY));
-      if(s.PTY) shortDayMap[dk].pty.push(parseInt(s.PTY));
-      if(s.POP) shortDayMap[dk].pop.push(parseInt(s.POP));
+      if(!dayMap[dk])dayMap[dk]={temps:[],sky:[],pty:[],pop:[]};
+      if(s.TMP) dayMap[dk].temps.push(parseFloat(s.TMP));
+      if(s.SKY) dayMap[dk].sky.push(parseInt(s.SKY));
+      if(s.PTY) dayMap[dk].pty.push(parseInt(s.PTY));
+      if(s.POP) dayMap[dk].pop.push(parseInt(s.POP));
     });
+    const todayKey=padDate(now);
+    const futureDays=Object.keys(dayMap).filter(dk=>dk>todayKey).sort();
 
-    /* ── 중기예보 파싱 ── */
-    const landItem=landJson?.response?.body?.items?.item?.[0]||{};
-    const tempItem=tempJson?.response?.body?.items?.item?.[0]||{};
-
-    /* 중기는 D+3 ~ D+7 (발표일 기준 3~7일 후) */
-    /* 날짜 키 생성 헬퍼 */
-    function futureKey(offsetDays){
-      const d=new Date(now); d.setDate(d.getDate()+offsetDays);
-      return padDate(d);
-    }
-    /* 중기 SKY 코드 → WX_SVG 매핑: 1맑음 2구름조금 3구름많음 4흐림 */
-    function midSky2Svg(sky,rnSt){
-      if(rnSt>=60) return WX_SVG.rain;
-      if(sky===1)  return WX_SVG.sunny;
-      if(sky===2)  return WX_SVG.partcloud;
-      if(sky===3)  return WX_SVG.cloudy;
-      return WX_SVG.overcast;
-    }
-    function midSky2Desc(sky,rnSt){
-      if(rnSt>=60) return '비';
-      if(sky===1)  return '맑음';
-      if(sky===2)  return '구름조금';
-      if(sky===3)  return '구름많음';
-      return '흐림';
-    }
-
-    /* ── 차트 렌더 ── */
+    /* 차트 SVG */
     function makeTempChart(pts){
-      if(!pts.length)return'';
+      if(!pts.length) return '';
       const W=130,H=70,pad=14;
       const temps=pts.map(p=>p.temp);
       const mn=Math.min(...temps),mx=Math.max(...temps),range=mx-mn||1;
@@ -642,10 +557,10 @@ async function loadWeather(){
       let path=`M${xs[0]},${ys[0]}`;
       for(let i=1;i<xs.length;i++) path+=` L${xs[i]},${ys[i]}`;
       const dots=pts.map((p,i)=>`<circle cx="${xs[i]}" cy="${ys[i]}" r="3" fill="#f0c060"/><text x="${xs[i]}" y="${ys[i]-7}" text-anchor="middle" font-size="9" fill="#f0f2f8" font-family="sans-serif">${p.temp}°</text><text x="${xs[i]}" y="${H+2}" text-anchor="middle" font-size="8" fill="#8890aa" font-family="sans-serif">${p.hour}시</text><text x="${xs[i]}" y="${H+12}" text-anchor="middle" font-size="8" fill="#7baaf7" font-family="sans-serif">${p.rain>0?p.rain+'%':''}</text>`).join('');
-      return`<svg viewBox="0 0 ${W} ${H+16}" width="100%" style="display:block;margin-top:4px;"><path d="${path}" fill="none" stroke="rgba(240,192,96,0.5)" stroke-width="1.5"/>${dots}</svg>`;
+      return `<svg viewBox="0 0 ${W} ${H+16}" width="100%" style="display:block;margin-top:4px;"><path d="${path}" fill="none" stroke="rgba(240,192,96,0.5)" stroke-width="1.5"/>${dots}</svg>`;
     }
 
-    /* ── HTML 조립 ── */
+    /* HTML 조립 */
     const wxClick=`<span class="wx-img-link" title="기상청 날씨" onclick="openTab('https://www.weather.go.kr/w/index.do')">${kmaCode2Svg(curSky,curPty)}</span>`;
     let html=`<div class="weather-scroll">
       <div class="wx-card today" style="min-width:234px;max-width:286px;">
@@ -661,12 +576,8 @@ async function loadWeather(){
         </div>
       </div>`;
 
-    const todayKey=padDate(now);
-
-    /* 단기 D+1 ~ D+2 */
-    const shortFuture=Object.keys(shortDayMap).filter(dk=>dk>todayKey).sort().slice(0,2);
-    shortFuture.forEach(dk=>{
-      const d=shortDayMap[dk];
+    futureDays.forEach(dk=>{
+      const d=dayMap[dk];
       const hi=d.temps.length?Math.round(Math.max(...d.temps)):'-';
       const lo=d.temps.length?Math.round(Math.min(...d.temps)):'-';
       const maxRain=d.pop.length?Math.max(...d.pop):0;
@@ -678,54 +589,12 @@ async function loadWeather(){
         <div style="width:53px;height:53px;">${kmaCode2Svg(domSky,domPty)}</div>
         <div style="font-size:18px;font-weight:700;white-space:nowrap;"><span style="color:#f87171">${hi}°</span> / <span style="color:#7baaf7">${lo}°</span></div>
         <div style="font-size:10px;color:#8890aa;">${kmaCode2Desc(domSky,domPty)}</div>
-        <div style="font-size:10px;display:flex;gap:6px;justify-content:center;white-space:nowrap;"><span>☂️${maxRain}%</span></div>
+        <div style="font-size:10px;white-space:nowrap;"><span>☂️${maxRain}%</span></div>
       </div>`;
     });
 
-    /* 중기 D+3 ~ D+7 */
-    for(let offset=3;offset<=7;offset++){
-      const dk=futureKey(offset);
-      const dt=new Date(now); dt.setDate(dt.getDate()+offset);
-      /* 중기육상: 필드명 예) rnSt3Am, wf3Am / rnSt3Pm, wf3Pm */
-      const rnAm=parseInt(landItem[`rnSt${offset}Am`]??landItem[`rnSt${offset}`]??0);
-      const rnPm=parseInt(landItem[`rnSt${offset}Pm`]??landItem[`rnSt${offset}`]??0);
-      const wfAm=landItem[`wf${offset}Am`]??landItem[`wf${offset}`]??'';
-      const wfPm=landItem[`wf${offset}Pm`]??landItem[`wf${offset}`]??'';
-      const maxRain=Math.max(rnAm,rnPm);
-      /* wf 문자열 → 아이콘 */
-      function wf2Svg(wf,rn){
-        if(rn>=60||wf.includes('비'))       return WX_SVG.rain;
-        if(wf.includes('눈'))               return WX_SVG.snow;
-        if(wf.includes('흐림'))             return WX_SVG.overcast;
-        if(wf.includes('구름많'))           return WX_SVG.cloudy;
-        if(wf.includes('구름조금')||wf.includes('구름 조금')) return WX_SVG.partcloud;
-        return WX_SVG.sunny;
-      }
-      function wf2Desc(wf,rn){
-        if(rn>=60||wf.includes('비'))  return '비';
-        if(wf.includes('눈'))          return '눈';
-        if(wf.includes('흐'))          return '흐림';
-        if(wf.includes('구름많'))      return '구름많음';
-        if(wf.includes('구름조금')||wf.includes('구름 조금')) return '구름조금';
-        return '맑음';
-      }
-      const repWf=wfPm||wfAm;
-      const repRn=maxRain;
-      /* 중기기온 */
-      const hi=tempItem[`taMax${offset}`]??'-';
-      const lo=tempItem[`taMin${offset}`]??'-';
-      html+=`<div class="wx-card" style="gap:4px;">
-        <div style="color:#8890aa;font-size:11px;white-space:nowrap;">${dt.getMonth()+1}/${dt.getDate()} (${DAY_KR[dt.getDay()]})</div>
-        <div style="width:53px;height:53px;">${wf2Svg(repWf,repRn)}</div>
-        <div style="font-size:18px;font-weight:700;white-space:nowrap;"><span style="color:#f87171">${hi}°</span> / <span style="color:#7baaf7">${lo}°</span></div>
-        <div style="font-size:10px;color:#8890aa;">${wf2Desc(repWf,repRn)}</div>
-        <div style="font-size:10px;display:flex;gap:6px;justify-content:center;white-space:nowrap;"><span>☂️${maxRain}%</span></div>
-      </div>`;
-    }
-
     html+=`</div>`;
     el.innerHTML=html;
-
   }catch(e){
     el.innerHTML=`<div class="weather-loading">날씨를 불러오지 못했습니다.<br><small style="color:#445;font-size:10px;">${e.message||e}</small></div>`;
   }
