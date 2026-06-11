@@ -86,9 +86,9 @@ body.desktop .shortcut-item:hover .del-btn{display:flex;}
 body.desktop .shortcut-add-plus{font-size:24px;color:#555;}
 body.desktop .bottom-col{display:flex;flex-direction:column;gap:16px;}
 body.desktop .weather-layer{padding:1.1rem 0;position:relative;}
-body.desktop .weather-scroll{display:flex;gap:10px;overflow-x:auto;padding-bottom:4px;max-width:100%;justify-content:center;}
+body.desktop .weather-scroll{display:flex;gap:10px;overflow-x:auto;padding-bottom:4px;max-width:100%;justify-content:center;align-items:flex-start;}
 body.desktop .wx-card{border-radius:14px;padding:12px 6px 10px;min-width:63px;max-width:98px;flex:1;}
-body.desktop .wx-card.today{min-width:180px;max-width:none;}
+body.desktop .wx-card.today{min-width:unset;max-width:none;width:fit-content;flex:none;}
 body.desktop .weather-loading{padding:2rem 0;color:#556;font-size:13px;text-align:center;line-height:1.8;}
 body.desktop .modal-overlay{align-items:center;justify-content:center;}
 body.desktop .modal-box{background:#1a1d26;border-radius:18px;padding:1.75rem;width:360px;border:1px solid #2e3245;box-shadow:0 8px 40px rgba(0,0,0,0.4);}
@@ -142,8 +142,8 @@ body.mobile .bottom-col{display:flex;flex-direction:column;gap:12px;}
 body.mobile .weather-layer{padding:12px 8px;position:relative;}
 body.mobile .weather-scroll{display:flex;gap:5px;overflow-x:auto;padding-bottom:4px;}
 body.mobile .weather-scroll::-webkit-scrollbar{height:0;}
-body.mobile .wx-card{border-radius:10px;padding:8px 6px 7px;min-width:96px;flex:1;}
-body.mobile .wx-card.today{min-width:160px;max-width:none;}
+body.mobile .wx-card{border-radius:10px;padding:8px 6px 7px;min-width:80px;flex:1;}
+body.mobile .wx-card.today{min-width:unset;max-width:none;width:fit-content;flex:none;}
 body.mobile .weather-loading{padding:1.5rem 0;color:#556;font-size:13px;text-align:center;line-height:1.8;}
 body.mobile .modal-overlay{align-items:flex-end;justify-content:center;}
 body.mobile .modal-box{background:#1a1d26;border-radius:20px 20px 0 0;padding:20px 20px calc(env(safe-area-inset-bottom,0px) + 20px);width:100%;border-top:1px solid #2e3245;}
@@ -462,7 +462,7 @@ async function loadWeather(){
     const items=json?.response?.body?.items?.item||[];
     if(!items.length) throw new Error('데이터 없음');
 
-    /* 시간별 슬롯 구성 */
+    /* 시간별 슬롯 구성 — carry-forward 없이 원본 그대로 */
     const byTime={};
     items.forEach(({fcstDate,fcstTime,category,fcstValue})=>{
       const k=`${fcstDate}${fcstTime}`;
@@ -487,11 +487,11 @@ async function loadWeather(){
     const chartPts=[];
     const nowMs=now.getTime();
     for(const s of slots){
-      if(chartPts.length>=11) break;
+      if(chartPts.length>=9) break;
       const h=parseInt(s.time.slice(0,2));
       const slotMs=new Date(parseInt(s.date.slice(0,4)),parseInt(s.date.slice(4,6))-1,parseInt(s.date.slice(6,8)),h).getTime();
       if(slotMs>=nowMs-1800000)
-        chartPts.push({hour:h,temp:Math.round(parseFloat(s.TMP||0)),rain:parseInt(s.POP||0)});
+        chartPts.push({hour:h,temp:Math.round(parseFloat(s.TMP||0)),rain:parseInt(s.POP||0),sky:parseInt(s.SKY||1),pty:parseInt(s.PTY||0)});
     }
 
     /* 일별 집계 */
@@ -507,38 +507,71 @@ async function loadWeather(){
     const todayKey=padDate(now);
     const futureDays=Object.keys(dayMap).filter(dk=>dk>todayKey).sort();
 
-    /* 차트 SVG — 포인트당 고정 26px 간격 */
+    /* 날씨 아이콘 SVG (이모지 대신 순수 SVG 도형) */
+    function wxIconSVG(pty,sky,sz){
+      const s=sz||14;
+      if(pty>=1){ // 비
+        return `<g transform="scale(${s/16})"><ellipse cx="8" cy="5" rx="6" ry="3.5" fill="#90bce0"/><ellipse cx="4" cy="4" rx="4" ry="3" fill="#b0d0f0"/><ellipse cx="11" cy="4" rx="4" ry="3" fill="#a0c8e8"/><line x1="5" y1="10" x2="4" y2="14" stroke="#5599cc" stroke-width="1.5" stroke-linecap="round"/><line x1="8" y1="10" x2="7" y2="14" stroke="#5599cc" stroke-width="1.5" stroke-linecap="round"/><line x1="11" y1="10" x2="10" y2="14" stroke="#5599cc" stroke-width="1.5" stroke-linecap="round"/></g>`;
+      }
+      if(sky===1){ // 맑음
+        return `<g transform="scale(${s/16})"><circle cx="8" cy="8" r="4" fill="#fbbf24"/><g stroke="#f59e0b" stroke-width="1.2" stroke-linecap="round"><line x1="8" y1="1" x2="8" y2="3"/><line x1="8" y1="13" x2="8" y2="15"/><line x1="1" y1="8" x2="3" y2="8"/><line x1="13" y1="8" x2="15" y2="8"/><line x1="2.8" y1="2.8" x2="4.2" y2="4.2"/><line x1="11.8" y1="2.8" x2="13.2" y2="4.2"/><line x1="2.8" y1="13.2" x2="4.2" y2="11.8"/><line x1="11.8" y1="13.2" x2="13.2" y2="11.8"/></g></g>`;
+      }
+      if(sky===3){ // 구름많음(구름+해)
+        return `<g transform="scale(${s/16})"><circle cx="11" cy="5" r="3.5" fill="#fbbf24"/><ellipse cx="7" cy="11" rx="6" ry="3.5" fill="#c8dff5"/><ellipse cx="4" cy="10" rx="4" ry="3" fill="#deeffe"/><ellipse cx="10" cy="9.5" rx="4.5" ry="3.2" fill="#deeffe"/></g>`;
+      }
+      // 흐림
+      return `<g transform="scale(${s/16})"><ellipse cx="8" cy="10" rx="6" ry="3.5" fill="#bcd8f2"/><ellipse cx="5" cy="9" rx="4" ry="3" fill="#c8e0f4"/><ellipse cx="10" cy="8.5" rx="4.5" ry="3.2" fill="#c8e0f4"/></g>`;
+    }
+
+    /* 차트 SVG */
     function makeTempChart(pts){
       if(!pts.length) return '';
-      const STEP=26,PAD=14,H=70;
+      const STEP=30,PAD=10,H=90;
+      const FS=10.5;
+      const ICON_SZ=14;
+      const ROW_TIME=H+14;
+      const ROW_ICON_CY=H+32;   // 아이콘 중심 y (시간~강수 정가운데)
+      const ROW_RAIN=H+50;
+      const TOTAL_H=ROW_RAIN+8;
       const W=PAD+(pts.length-1)*STEP+PAD;
       const temps=pts.map(p=>p.temp);
       const mn=Math.min(...temps),mx=Math.max(...temps),range=mx-mn||1;
       const xs=pts.map((_,i)=>PAD+i*STEP);
-      const ys=pts.map(p=>H-14-((p.temp-mn)/range)*(H-32));
+      const ys=pts.map(p=>H-16-((p.temp-mn)/range)*(H-36));
       let path=`M${xs[0]},${ys[0]}`;
       for(let i=1;i<xs.length;i++) path+=` L${xs[i]},${ys[i]}`;
-      const dots=pts.map((p,i)=>`<circle cx="${xs[i]}" cy="${ys[i]}" r="3" fill="#f0c060"/><text x="${xs[i]}" y="${ys[i]-7}" text-anchor="middle" font-size="9" fill="#f0f2f8" font-family="sans-serif">${p.temp}°</text><text x="${xs[i]}" y="${H+2}" text-anchor="middle" font-size="8" fill="#8890aa" font-family="sans-serif">${p.hour}시</text><text x="${xs[i]}" y="${H+12}" text-anchor="middle" font-size="8" fill="#7baaf7" font-family="sans-serif">${p.rain>0?p.rain+'%':''}</text>`).join('');
-      return `<svg viewBox="0 0 ${W} ${H+16}" width="${W}" style="display:block;margin-top:4px;"><path d="${path}" fill="none" stroke="rgba(240,192,96,0.5)" stroke-width="1.5"/>${dots}</svg>`;
+      const dots=pts.map((p,i)=>{
+        const pty=parseInt(p.pty)||0;
+        const sky=parseInt(p.sky)||1;
+        // 아이콘: translate로 아이콘 중심을 (xs[i], ROW_ICON_CY)에 맞춤
+        const iconG=`<g transform="translate(${xs[i]-ICON_SZ/2},${ROW_ICON_CY-ICON_SZ/2})">${wxIconSVG(pty,sky,ICON_SZ)}</g>`;
+        return `<circle cx="${xs[i]}" cy="${ys[i]}" r="3.5" fill="#f0c060"/>` +
+          `<text x="${xs[i]}" y="${ys[i]-9}" text-anchor="middle" font-size="${FS}" font-weight="600" fill="#f0f2f8" font-family="sans-serif">${p.temp}°</text>` +
+          `<text x="${xs[i]}" y="${ROW_TIME}" text-anchor="middle" font-size="${FS}" fill="#8890aa" font-family="sans-serif">${p.hour}시</text>` +
+          iconG +
+          `<text x="${xs[i]}" y="${ROW_RAIN}" text-anchor="middle" font-size="${FS}" fill="#7baaf7" font-family="sans-serif">${p.rain>0?p.rain+'%':'-'}</text>`;
+      }).join('');
+      // viewBox와 width를 동일하게 고정, 컨테이너도 inline-block으로
+      return `<svg viewBox="0 0 ${W} ${TOTAL_H}" width="${W}" height="${TOTAL_H}" style="display:inline-block;margin-top:4px;flex-shrink:0;">`+
+        `<path d="${path}" fill="none" stroke="rgba(240,192,96,0.55)" stroke-width="1.8"/>${dots}</svg>`;
     }
 
     /* HTML 조립 */
-    const STEP=26,PAD=14;
+    const STEP=30,PAD=10;
     const chartW=PAD+(chartPts.length-1)*STEP+PAD;
-    const cardMinW=Math.max(234,82+10+chartW+24);
     const wxClick=`<span class="wx-img-link" title="기상청 날씨" onclick="openTab('https://www.weather.go.kr/w/index.do')">${kmaCode2Svg(curSky,curPty)}</span>`;
 
     let html=`<div class="weather-scroll">
-      <div class="wx-card today" style="min-width:${cardMinW}px;max-width:none;flex-shrink:0;">
-        <div style="display:flex;align-items:center;gap:10px;width:100%;">
-          <div style="display:flex;flex-direction:column;align-items:center;gap:4px;min-width:82px;flex-shrink:0;">
+      <div class="wx-card today" style="width:fit-content;min-width:unset;max-width:none;flex-shrink:0;">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:4px;width:82px;flex-shrink:0;">
             <div style="color:#8890aa;font-size:11px;white-space:nowrap;">${now.getMonth()+1}/${now.getDate()} (${DAY_KR[now.getDay()]})</div>
             <div style="width:53px;height:53px;">${wxClick}</div>
             <div style="font-size:18px;font-weight:700;color:#f0f2f8;">${curTemp}°C</div>
             <div style="font-size:10px;color:#8890aa;">${kmaCode2Desc(curSky,curPty)}</div>
             <div style="font-size:10px;display:flex;gap:6px;justify-content:center;white-space:nowrap;"><span>☂️${curRain}%</span><span>💧${curHum}%</span></div>
           </div>
-          <div style="overflow-x:auto;">${makeTempChart(chartPts)}</div>
+          <div style="flex-shrink:0;">${makeTempChart(chartPts)}</div>
         </div>
       </div>`;
 
