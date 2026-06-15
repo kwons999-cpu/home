@@ -52,8 +52,9 @@ body.desktop .gateway{max-width:1200px;margin:0 auto;padding:0 1.5rem 3rem;}
 body.desktop .clock-layer{text-align:center;margin-bottom:1.8rem;margin-top:2rem;}
 body.desktop #clock-date{font-size:clamp(14px,1.6vw,22px);letter-spacing:1px;}
 body.desktop #clock-time{font-size:clamp(28px,3.8vw,52px);gap:0;}
-body.desktop .search-layer{display:flex;align-items:center;gap:8px;max-width:920px;margin:0 auto 1.8rem;flex-wrap:wrap;justify-content:center;}
-body.desktop .search-wrap{position:relative;flex:1;min-width:240px;display:flex;align-items:center;height:48px;border-radius:24px;border:1px solid rgba(255,255,255,0.12);background:rgba(22,25,38,0.97);padding:0 14px 0 22px;gap:4px;}
+body.desktop .content-col{max-width:900px;margin:0 auto;}
+body.desktop .search-layer{display:flex;align-items:center;gap:8px;margin:0 0 1.8rem;flex-wrap:wrap;justify-content:center;max-width:100%;}
+body.desktop .search-wrap{position:relative;flex:0 0 400px;min-width:192px;display:flex;align-items:center;height:48px;border-radius:24px;border:1px solid rgba(255,255,255,0.12);background:rgba(22,25,38,0.97);padding:0 14px 0 22px;gap:4px;}
 body.desktop .search-wrap:focus-within{border-color:#4285F4;box-shadow:0 0 0 3px rgba(66,133,244,0.18);}
 body.desktop .search-wrap input{flex:1;background:transparent;border:none;font-size:15px;color:#e8eaf0;outline:none;height:100%;}
 body.desktop .search-wrap input::placeholder{color:#556;}
@@ -73,22 +74,22 @@ body.desktop .btn-ai svg{width:26px;height:26px;display:block;}
 body.desktop .btn-chatgpt{background:#10a37f;}
 body.desktop .btn-gemini{background:#1a73e8;}
 body.desktop .btn-claude-ai{background:#cc785c;}
-body.desktop .btn-perplexity{background:#20b2aa;}
-body.desktop .shortcuts-layer{padding:1rem 1.25rem;margin-bottom:1.6rem;}
-body.desktop .shortcuts-grid{display:flex;flex-wrap:nowrap;gap:8px;justify-content:center;align-items:flex-start;overflow-x:auto;}
-body.desktop .shortcuts-grid::-webkit-scrollbar{height:0;}
-body.desktop .shortcut-item{gap:6px;min-width:72px;flex-shrink:0;padding-top:10px;}
-body.desktop .shortcut-wrap{width:56px;height:56px;}
-body.desktop .shortcut-icon{width:56px;height:56px;border-radius:14px;transition:box-shadow 0.15s;}
+/* 즐겨찾기 */
+body.desktop .shortcuts-layer{padding:1rem 0;margin-bottom:1.6rem;}
+body.desktop .shortcuts-grid{display:flex;flex-wrap:wrap;justify-content:center;align-items:flex-start;gap:0;width:100%;}
+body.desktop .shortcut-item{width:68px;padding-top:10px;gap:6px;flex-shrink:0;display:flex;flex-direction:column;align-items:center;}
+body.desktop .shortcut-wrap{width:45px;height:45px;}
+body.desktop .shortcut-icon{width:45px;height:45px;border-radius:11px;transition:box-shadow 0.15s;}
 body.desktop .shortcut-item:hover .shortcut-icon{box-shadow:0 0 0 2.5px rgba(255,255,255,0.3);}
-body.desktop .shortcut-label{font-size:11px;max-width:68px;}
+body.desktop .shortcut-label{font-size:11px;width:80px;text-align:center;}
 body.desktop .shortcut-item:hover .del-btn{display:flex;}
-body.desktop .shortcut-add-plus{font-size:24px;color:#555;}
+body.desktop .shortcut-add-plus{font-size:22px;color:#555;}
+/* 날씨 */
 body.desktop .bottom-col{display:flex;flex-direction:column;gap:16px;}
 body.desktop .weather-layer{padding:1.1rem 0;position:relative;}
-body.desktop .weather-scroll{display:flex;gap:10px;overflow-x:auto;padding-bottom:4px;max-width:100%;justify-content:center;align-items:flex-start;}
-body.desktop .wx-card{border-radius:14px;padding:12px 6px 10px;min-width:63px;max-width:98px;flex:1;}
-body.desktop .wx-card.today{min-width:unset;max-width:none;width:fit-content;flex:none;}
+body.desktop .weather-scroll{display:flex;gap:10px;overflow-x:auto;padding-bottom:4px;justify-content:center;align-items:flex-start;}
+body.desktop .wx-card{border-radius:14px;padding:12px 6px 10px;min-width:90px;flex:none;}
+body.desktop .wx-card.today{min-width:unset;width:fit-content;flex:none;}
 body.desktop .weather-loading{padding:2rem 0;color:#556;font-size:13px;text-align:center;line-height:1.8;}
 body.desktop .modal-overlay{align-items:center;justify-content:center;}
 body.desktop .modal-box{background:#1a1d26;border-radius:18px;padding:1.75rem;width:360px;border:1px solid #2e3245;box-shadow:0 8px 40px rgba(0,0,0,0.4);}
@@ -124,7 +125,6 @@ body.mobile .btn-ai svg{width:15px;height:15px;flex-shrink:0;}
 body.mobile .btn-chatgpt{background:#10a37f;}
 body.mobile .btn-gemini{background:#1a73e8;}
 body.mobile .btn-claude-ai{background:#cc785c;}
-body.mobile .btn-perplexity{background:#20b2aa;}
 body.mobile .shortcuts-layer{padding:12px 10px;margin-bottom:12px;}
 body.mobile .edit-toggle{display:block;text-align:right;font-size:12px;color:#556;margin-bottom:10px;cursor:pointer;}
 body.mobile .edit-toggle.active{color:#7baaf7;}
@@ -143,7 +143,7 @@ body.mobile .weather-layer{padding:12px 8px;position:relative;}
 body.mobile .weather-scroll{display:flex;gap:5px;overflow-x:auto;padding-bottom:4px;}
 body.mobile .weather-scroll::-webkit-scrollbar{height:0;}
 body.mobile .wx-card{border-radius:10px;padding:8px 6px 7px;min-width:80px;flex:1;}
-body.mobile .wx-card.today{min-width:unset;max-width:none;width:fit-content;flex:none;}
+body.mobile .wx-card.today{min-width:unset;width:fit-content;flex:none;}
 body.mobile .weather-loading{padding:1.5rem 0;color:#556;font-size:13px;text-align:center;line-height:1.8;}
 body.mobile .modal-overlay{align-items:flex-end;justify-content:center;}
 body.mobile .modal-box{background:#1a1d26;border-radius:20px 20px 0 0;padding:20px 20px calc(env(safe-area-inset-bottom,0px) + 20px);width:100%;border-top:1px solid #2e3245;}
@@ -169,52 +169,52 @@ body.mobile .modal-actions button{flex:1;height:44px;border-radius:10px;font-siz
     </div>
   </div>
 
-  <!-- 데스크톱 검색 -->
-  <div class="search-layer" id="search-desktop">
-    <div class="search-wrap">
-      <input type="text" id="sq-d" placeholder="검색 또는 AI에게 질문을 입력하세요..."/>
-      <button class="input-clear" id="clear-d" aria-label="검색어 지우기">✕</button>
+  <div class="content-col">
+    <!-- 데스크톱 검색 -->
+    <div class="search-layer" id="search-desktop">
+      <div class="search-wrap">
+        <input type="text" id="sq-d" placeholder="검색 또는 AI에게 질문을 입력하세요..."/>
+        <button class="input-clear" id="clear-d" aria-label="검색어 지우기">✕</button>
+      </div>
+      <button class="btn-search btn-naver" onclick="doSearch('naver')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>NAVER</button>
+      <button class="btn-search btn-google" onclick="doSearch('google')"><div class="google-dots"><span class="gd1"></span><span class="gd2"></span><span class="gd3"></span><span class="gd4"></span></div>Google</button>
+      <div class="ai-divider"></div>
+      <div class="ai-wrap"><button class="btn-ai btn-chatgpt" onclick="doAI('chatgpt')" aria-label="ChatGPT"><svg viewBox="0 0 41 41" fill="none"><path d="M37.532 16.87a9.963 9.963 0 0 0-.856-8.184 10.078 10.078 0 0 0-10.855-4.835 9.964 9.964 0 0 0-6.205-3.439A10.081 10.081 0 0 0 9.116 5.23a9.963 9.963 0 0 0-6.664 4.827 10.078 10.078 0 0 0 1.24 11.817 9.965 9.965 0 0 0 .856 8.185 10.079 10.079 0 0 0 10.855 4.835 9.965 9.965 0 0 0 6.205 3.44 10.079 10.079 0 0 0 10.272-4.948 9.967 9.967 0 0 0 6.664-4.834 10.079 10.079 0 0 0-1.012-11.683zm-15.115 21.169a7.473 7.473 0 0 1-4.797-1.735c.061-.033.168-.091.237-.134l7.964-4.6a1.294 1.294 0 0 0 .655-1.134V19.054l3.366 1.944a.12.12 0 0 1 .066.092v9.299a7.505 7.505 0 0 1-7.49 7.65zm-16.124-6.882a7.474 7.474 0 0 1-.894-5.023c.06.036.162.099.237.141l7.964 4.6a1.297 1.297 0 0 0 1.308 0l9.724-5.614v3.888a.12.12 0 0 1-.048.103l-8.051 4.649a7.504 7.504 0 0 1-10.24-2.744zm-2.09-17.503a7.474 7.474 0 0 1 3.909-3.297V19.7a1.294 1.294 0 0 0 .654 1.132l9.723 5.614-3.366 1.944a.12.12 0 0 1-.114.012L5.057 23.565a7.504 7.504 0 0 1-.854-9.911zm27.533 6.441l-9.724-5.615 3.367-1.943a.121.121 0 0 1 .114-.012l8.048 4.648a7.498 7.498 0 0 1-1.158 13.528v-9.476a1.293 1.293 0 0 0-.647-1.13zm3.35-5.043c-.059-.037-.162-.099-.236-.141l-7.965-4.6a1.298 1.298 0 0 0-1.308 0l-9.723 5.614v-3.888a.12.12 0 0 1 .048-.103l8.05-4.645a7.497 7.497 0 0 1 11.135 7.763zm-21.063 6.929l-3.367-1.944a.12.12 0 0 1-.065-.092v-9.299a7.497 7.497 0 0 1 12.293-5.756 6.94 6.94 0 0 0-.236.134l-7.965 4.6a1.294 1.294 0 0 0-.654 1.132l-.006 11.225zm1.829-3.943l4.33-2.501 4.332 2.5v4.999l-4.331 2.5-4.331-2.5V18.058z" fill="white"/></svg></button><span class="ai-tooltip">ChatGPT</span></div>
+      <div class="ai-wrap"><button class="btn-ai btn-gemini" onclick="doAI('gemini')" aria-label="Gemini"><svg viewBox="0 0 28 28" fill="none"><path d="M14 28C14 26.0633 13.6267 24.2433 12.88 22.54C12.1567 20.8367 11.165 19.355 9.905 18.095C8.645 16.835 7.16333 15.8433 5.46 15.12C3.75667 14.3733 1.93667 14 0 14C1.93667 14 3.75667 13.6383 5.46 12.915C7.16333 12.1683 8.645 11.165 9.905 9.905C11.165 8.645 12.1567 7.16333 12.88 5.46C13.6267 3.75667 14 1.93667 14 0C14 1.93667 14.3617 3.75667 15.085 5.46C15.8317 7.16333 16.835 8.645 18.095 9.905C19.355 11.165 20.8367 12.1683 22.54 12.915C24.2433 13.6383 26.0633 14 28 14C26.0633 14 24.2433 14.3733 22.54 15.12C20.8367 15.8433 19.355 16.835 18.095 18.095C16.835 19.355 15.8317 20.8367 15.085 22.54C14.3617 24.2433 14 26.0633 14 28Z" fill="white"/></svg></button><span class="ai-tooltip">Gemini</span></div>
+      <div class="ai-wrap"><button class="btn-ai btn-claude-ai" onclick="doAI('claude')" aria-label="Claude"><svg viewBox="0 0 24 24" fill="none"><path d="M17.304 1.793C15.973.55 14.19-.08 12.36.01c-2.57.13-4.9 1.52-6.22 3.73L.88 12.59c-.96 1.63-.98 3.63-.06 5.28.92 1.65 2.65 2.68 4.52 2.71l.35.01v1.6c0 1 .54 1.92 1.42 2.41.87.49 1.94.46 2.79-.07l10.65-6.5c1.48-.9 2.44-2.43 2.56-4.12.12-1.69-.62-3.34-1.96-4.42l-.46-.37.31-.53c.69-1.18.84-2.6.4-3.9-.44-1.3-1.38-2.36-2.62-2.95zm-5.6 18.37-3.49-6.04 6.08-3.51 3.49 6.04-6.08 3.51zm4.27-10.44-6.08 3.51-3.49-6.04 6.08-3.51 3.49 6.04z" fill="white"/></svg></button><span class="ai-tooltip">Claude</span></div>
     </div>
-    <button class="btn-search btn-naver" onclick="doSearch('naver')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>NAVER</button>
-    <button class="btn-search btn-google" onclick="doSearch('google')"><div class="google-dots"><span class="gd1"></span><span class="gd2"></span><span class="gd3"></span><span class="gd4"></span></div>Google</button>
-    <div class="ai-divider"></div>
-    <div class="ai-wrap"><button class="btn-ai btn-chatgpt" onclick="doAI('chatgpt')" aria-label="ChatGPT"><svg viewBox="0 0 41 41" fill="none"><path d="M37.532 16.87a9.963 9.963 0 0 0-.856-8.184 10.078 10.078 0 0 0-10.855-4.835 9.964 9.964 0 0 0-6.205-3.439A10.081 10.081 0 0 0 9.116 5.23a9.963 9.963 0 0 0-6.664 4.827 10.078 10.078 0 0 0 1.24 11.817 9.965 9.965 0 0 0 .856 8.185 10.079 10.079 0 0 0 10.855 4.835 9.965 9.965 0 0 0 6.205 3.44 10.079 10.079 0 0 0 10.272-4.948 9.967 9.967 0 0 0 6.664-4.834 10.079 10.079 0 0 0-1.012-11.683zm-15.115 21.169a7.473 7.473 0 0 1-4.797-1.735c.061-.033.168-.091.237-.134l7.964-4.6a1.294 1.294 0 0 0 .655-1.134V19.054l3.366 1.944a.12.12 0 0 1 .066.092v9.299a7.505 7.505 0 0 1-7.49 7.65zm-16.124-6.882a7.474 7.474 0 0 1-.894-5.023c.06.036.162.099.237.141l7.964 4.6a1.297 1.297 0 0 0 1.308 0l9.724-5.614v3.888a.12.12 0 0 1-.048.103l-8.051 4.649a7.504 7.504 0 0 1-10.24-2.744zm-2.09-17.503a7.474 7.474 0 0 1 3.909-3.297V19.7a1.294 1.294 0 0 0 .654 1.132l9.723 5.614-3.366 1.944a.12.12 0 0 1-.114.012L5.057 23.565a7.504 7.504 0 0 1-.854-9.911zm27.533 6.441l-9.724-5.615 3.367-1.943a.121.121 0 0 1 .114-.012l8.048 4.648a7.498 7.498 0 0 1-1.158 13.528v-9.476a1.293 1.293 0 0 0-.647-1.13zm3.35-5.043c-.059-.037-.162-.099-.236-.141l-7.965-4.6a1.298 1.298 0 0 0-1.308 0l-9.723 5.614v-3.888a.12.12 0 0 1 .048-.103l8.05-4.645a7.497 7.497 0 0 1 11.135 7.763zm-21.063 6.929l-3.367-1.944a.12.12 0 0 1-.065-.092v-9.299a7.497 7.497 0 0 1 12.293-5.756 6.94 6.94 0 0 0-.236.134l-7.965 4.6a1.294 1.294 0 0 0-.654 1.132l-.006 11.225zm1.829-3.943l4.33-2.501 4.332 2.5v4.999l-4.331 2.5-4.331-2.5V18.058z" fill="white"/></svg></button><span class="ai-tooltip">ChatGPT</span></div>
-    <div class="ai-wrap"><button class="btn-ai btn-gemini" onclick="doAI('gemini')" aria-label="Gemini"><svg viewBox="0 0 28 28" fill="none"><path d="M14 28C14 26.0633 13.6267 24.2433 12.88 22.54C12.1567 20.8367 11.165 19.355 9.905 18.095C8.645 16.835 7.16333 15.8433 5.46 15.12C3.75667 14.3733 1.93667 14 0 14C1.93667 14 3.75667 13.6383 5.46 12.915C7.16333 12.1683 8.645 11.165 9.905 9.905C11.165 8.645 12.1567 7.16333 12.88 5.46C13.6267 3.75667 14 1.93667 14 0C14 1.93667 14.3617 3.75667 15.085 5.46C15.8317 7.16333 16.835 8.645 18.095 9.905C19.355 11.165 20.8367 12.1683 22.54 12.915C24.2433 13.6383 26.0633 14 28 14C26.0633 14 24.2433 14.3733 22.54 15.12C20.8367 15.8433 19.355 16.835 18.095 18.095C16.835 19.355 15.8317 20.8367 15.085 22.54C14.3617 24.2433 14 26.0633 14 28Z" fill="white"/></svg></button><span class="ai-tooltip">Gemini</span></div>
-    <div class="ai-wrap"><button class="btn-ai btn-claude-ai" onclick="doAI('claude')" aria-label="Claude"><svg viewBox="0 0 24 24" fill="none"><path d="M17.304 1.793C15.973.55 14.19-.08 12.36.01c-2.57.13-4.9 1.52-6.22 3.73L.88 12.59c-.96 1.63-.98 3.63-.06 5.28.92 1.65 2.65 2.68 4.52 2.71l.35.01v1.6c0 1 .54 1.92 1.42 2.41.87.49 1.94.46 2.79-.07l10.65-6.5c1.48-.9 2.44-2.43 2.56-4.12.12-1.69-.62-3.34-1.96-4.42l-.46-.37.31-.53c.69-1.18.84-2.6.4-3.9-.44-1.3-1.38-2.36-2.62-2.95zm-5.6 18.37-3.49-6.04 6.08-3.51 3.49 6.04-6.08 3.51zm4.27-10.44-6.08 3.51-3.49-6.04 6.08-3.51 3.49 6.04z" fill="white"/></svg></button><span class="ai-tooltip">Claude</span></div>
-    <div class="ai-wrap"><button class="btn-ai btn-perplexity" onclick="doAI('perplexity')" aria-label="Perplexity"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button><span class="ai-tooltip">Perplexity</span></div>
-  </div>
 
-  <!-- 모바일 검색 -->
-  <div class="search-layer" id="search-mobile">
-    <div class="search-box">
-      <input type="text" id="sq-m" placeholder="검색 또는 AI에게 질문..."/>
-      <button class="input-clear" id="clear-m" aria-label="검색어 지우기">✕</button>
-      <div class="search-divider"></div>
-      <div class="search-btns">
-        <button class="btn-s btn-s-naver" onclick="doSearch('naver')"><div class="btn-s-inner"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#03C75A" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg><span>NAVER</span></div></button>
-        <button class="btn-s btn-s-google" onclick="doSearch('google')"><div class="btn-s-inner"><div class="google-dots"><span class="gd1"></span><span class="gd2"></span><span class="gd3"></span><span class="gd4"></span></div><span>Google</span></div></button>
+    <!-- 모바일 검색 -->
+    <div class="search-layer" id="search-mobile">
+      <div class="search-box">
+        <input type="text" id="sq-m" placeholder="검색 또는 AI에게 질문..."/>
+        <button class="input-clear" id="clear-m" aria-label="검색어 지우기">✕</button>
+        <div class="search-divider"></div>
+        <div class="search-btns">
+          <button class="btn-s btn-s-naver" onclick="doSearch('naver')"><div class="btn-s-inner"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#03C75A" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg><span>NAVER</span></div></button>
+          <button class="btn-s btn-s-google" onclick="doSearch('google')"><div class="btn-s-inner"><div class="google-dots"><span class="gd1"></span><span class="gd2"></span><span class="gd3"></span><span class="gd4"></span></div><span>Google</span></div></button>
+        </div>
       </div>
     </div>
-  </div>
 
-  <div class="ai-row" id="ai-mobile">
-    <button class="btn-ai btn-chatgpt" onclick="doAI('chatgpt')"><svg viewBox="0 0 41 41" fill="none"><path d="M37.532 16.87a9.963 9.963 0 0 0-.856-8.184 10.078 10.078 0 0 0-10.855-4.835 9.964 9.964 0 0 0-6.205-3.439A10.081 10.081 0 0 0 9.116 5.23a9.963 9.963 0 0 0-6.664 4.827 10.078 10.078 0 0 0 1.24 11.817 9.965 9.965 0 0 0 .856 8.185 10.079 10.079 0 0 0 10.855 4.835 9.965 9.965 0 0 0 6.205 3.44 10.079 10.079 0 0 0 10.272-4.948 9.967 9.967 0 0 0 6.664-4.834 10.079 10.079 0 0 0-1.012-11.683zm-15.115 21.169a7.473 7.473 0 0 1-4.797-1.735c.061-.033.168-.091.237-.134l7.964-4.6a1.294 1.294 0 0 0 .655-1.134V19.054l3.366 1.944a.12.12 0 0 1 .066.092v9.299a7.505 7.505 0 0 1-7.49 7.65zm-16.124-6.882a7.474 7.474 0 0 1-.894-5.023c.06.036.162.099.237.141l7.964 4.6a1.297 1.297 0 0 0 1.308 0l9.724-5.614v3.888a.12.12 0 0 1-.048.103l-8.051 4.649a7.504 7.504 0 0 1-10.24-2.744zm-2.09-17.503a7.474 7.474 0 0 1 3.909-3.297V19.7a1.294 1.294 0 0 0 .654 1.132l9.723 5.614-3.366 1.944a.12.12 0 0 1-.114.012L5.057 23.565a7.504 7.504 0 0 1-.854-9.911zm27.533 6.441l-9.724-5.615 3.367-1.943a.121.121 0 0 1 .114-.012l8.048 4.648a7.498 7.498 0 0 1-1.158 13.528v-9.476a1.293 1.293 0 0 0-.647-1.13zm3.35-5.043c-.059-.037-.162-.099-.236-.141l-7.965-4.6a1.298 1.298 0 0 0-1.308 0l-9.723 5.614v-3.888a.12.12 0 0 1 .048-.103l8.05-4.645a7.497 7.497 0 0 1 11.135 7.763zm-21.063 6.929l-3.367-1.944a.12.12 0 0 1-.065-.092v-9.299a7.497 7.497 0 0 1 12.293-5.756 6.94 6.94 0 0 0-.236.134l-7.965 4.6a1.294 1.294 0 0 0-.654 1.132l-.006 11.225zm1.829-3.943l4.33-2.501 4.332 2.5v4.999l-4.331 2.5-4.331-2.5V18.058z" fill="white"/></svg>ChatGPT</button>
-    <button class="btn-ai btn-gemini" onclick="doAI('gemini')"><svg viewBox="0 0 28 28" fill="none"><path d="M14 28C14 26.0633 13.6267 24.2433 12.88 22.54C12.1567 20.8367 11.165 19.355 9.905 18.095C8.645 16.835 7.16333 15.8433 5.46 15.12C3.75667 14.3733 1.93667 14 0 14C1.93667 14 3.75667 13.6383 5.46 12.915C7.16333 12.1683 8.645 11.165 9.905 9.905C11.165 8.645 12.1567 7.16333 12.88 5.46C13.6267 3.75667 14 1.93667 14 0C14 1.93667 14.3617 3.75667 15.085 5.46C15.8317 7.16333 16.835 8.645 18.095 9.905C19.355 11.165 20.8367 12.1683 22.54 12.915C24.2433 13.6383 26.0633 14 28 14C26.0633 14 24.2433 14.3733 22.54 15.12C20.8367 15.8433 19.355 16.835 18.095 18.095C16.835 19.355 15.8317 20.8367 15.085 22.54C14.3617 24.2433 14 26.0633 14 28Z" fill="white"/></svg>Gemini</button>
-    <button class="btn-ai btn-claude-ai" onclick="doAI('claude')"><svg viewBox="0 0 24 24" fill="none"><path d="M17.304 1.793C15.973.55 14.19-.08 12.36.01c-2.57.13-4.9 1.52-6.22 3.73L.88 12.59c-.96 1.63-.98 3.63-.06 5.28.92 1.65 2.65 2.68 4.52 2.71l.35.01v1.6c0 1 .54 1.92 1.42 2.41.87.49 1.94.46 2.79-.07l10.65-6.5c1.48-.9 2.44-2.43 2.56-4.12.12-1.69-.62-3.34-1.96-4.42l-.46-.37.31-.53c.69-1.18.84-2.6.4-3.9-.44-1.3-1.38-2.36-2.62-2.95zm-5.6 18.37-3.49-6.04 6.08-3.51 3.49 6.04-6.08 3.51zm4.27-10.44-6.08 3.51-3.49-6.04 6.08-3.51 3.49 6.04z" fill="white"/></svg>Claude</button>
-    <button class="btn-ai btn-perplexity" onclick="doAI('perplexity')"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Perplexity</button>
-  </div>
-
-  <div class="shortcuts-layer">
-    <span class="edit-toggle" id="edit-toggle">편집</span>
-    <div class="shortcuts-grid" id="shortcuts-grid"></div>
-  </div>
-
-  <div class="bottom-col">
-    <div class="weather-layer">
-      <button id="location-btn" onclick="changeLocation()" style="position:absolute;top:10px;right:12px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.15);color:#8890aa;font-size:11px;padding:3px 9px;border-radius:20px;cursor:pointer;z-index:2;transition:all 0.15s;" onmouseover="this.style.background='rgba(255,255,255,0.13)'" onmouseout="this.style.background='rgba(255,255,255,0.07)'">📍 <span id="location-label">서울특별시</span></button>
-      <div id="weather-content"><div class="weather-loading">날씨 불러오는 중...</div></div>
+    <div class="ai-row" id="ai-mobile">
+      <button class="btn-ai btn-chatgpt" onclick="doAI('chatgpt')"><svg viewBox="0 0 41 41" fill="none"><path d="M37.532 16.87a9.963 9.963 0 0 0-.856-8.184 10.078 10.078 0 0 0-10.855-4.835 9.964 9.964 0 0 0-6.205-3.439A10.081 10.081 0 0 0 9.116 5.23a9.963 9.963 0 0 0-6.664 4.827 10.078 10.078 0 0 0 1.24 11.817 9.965 9.965 0 0 0 .856 8.185 10.079 10.079 0 0 0 10.855 4.835 9.965 9.965 0 0 0 6.205 3.44 10.079 10.079 0 0 0 10.272-4.948 9.967 9.967 0 0 0 6.664-4.834 10.079 10.079 0 0 0-1.012-11.683zm-15.115 21.169a7.473 7.473 0 0 1-4.797-1.735c.061-.033.168-.091.237-.134l7.964-4.6a1.294 1.294 0 0 0 .655-1.134V19.054l3.366 1.944a.12.12 0 0 1 .066.092v9.299a7.505 7.505 0 0 1-7.49 7.65zm-16.124-6.882a7.474 7.474 0 0 1-.894-5.023c.06.036.162.099.237.141l7.964 4.6a1.297 1.297 0 0 0 1.308 0l9.724-5.614v3.888a.12.12 0 0 1-.048.103l-8.051 4.649a7.504 7.504 0 0 1-10.24-2.744zm-2.09-17.503a7.474 7.474 0 0 1 3.909-3.297V19.7a1.294 1.294 0 0 0 .654 1.132l9.723 5.614-3.366 1.944a.12.12 0 0 1-.114.012L5.057 23.565a7.504 7.504 0 0 1-.854-9.911zm27.533 6.441l-9.724-5.615 3.367-1.943a.121.121 0 0 1 .114-.012l8.048 4.648a7.498 7.498 0 0 1-1.158 13.528v-9.476a1.293 1.293 0 0 0-.647-1.13zm3.35-5.043c-.059-.037-.162-.099-.236-.141l-7.965-4.6a1.298 1.298 0 0 0-1.308 0l-9.723 5.614v-3.888a.12.12 0 0 1 .048-.103l8.05-4.645a7.497 7.497 0 0 1 11.135 7.763zm-21.063 6.929l-3.367-1.944a.12.12 0 0 1-.065-.092v-9.299a7.497 7.497 0 0 1 12.293-5.756 6.94 6.94 0 0 0-.236.134l-7.965 4.6a1.294 1.294 0 0 0-.654 1.132l-.006 11.225zm1.829-3.943l4.33-2.501 4.332 2.5v4.999l-4.331 2.5-4.331-2.5V18.058z" fill="white"/></svg>ChatGPT</button>
+      <button class="btn-ai btn-gemini" onclick="doAI('gemini')"><svg viewBox="0 0 28 28" fill="none"><path d="M14 28C14 26.0633 13.6267 24.2433 12.88 22.54C12.1567 20.8367 11.165 19.355 9.905 18.095C8.645 16.835 7.16333 15.8433 5.46 15.12C3.75667 14.3733 1.93667 14 0 14C1.93667 14 3.75667 13.6383 5.46 12.915C7.16333 12.1683 8.645 11.165 9.905 9.905C11.165 8.645 12.1567 7.16333 12.88 5.46C13.6267 3.75667 14 1.93667 14 0C14 1.93667 14.3617 3.75667 15.085 5.46C15.8317 7.16333 16.835 8.645 18.095 9.905C19.355 11.165 20.8367 12.1683 22.54 12.915C24.2433 13.6383 26.0633 14 28 14C26.0633 14 24.2433 14.3733 22.54 15.12C20.8367 15.8433 19.355 16.835 18.095 18.095C16.835 19.355 15.8317 20.8367 15.085 22.54C14.3617 24.2433 14 26.0633 14 28Z" fill="white"/></svg>Gemini</button>
+      <button class="btn-ai btn-claude-ai" onclick="doAI('claude')"><svg viewBox="0 0 24 24" fill="none"><path d="M17.304 1.793C15.973.55 14.19-.08 12.36.01c-2.57.13-4.9 1.52-6.22 3.73L.88 12.59c-.96 1.63-.98 3.63-.06 5.28.92 1.65 2.65 2.68 4.52 2.71l.35.01v1.6c0 1 .54 1.92 1.42 2.41.87.49 1.94.46 2.79-.07l10.65-6.5c1.48-.9 2.44-2.43 2.56-4.12.12-1.69-.62-3.34-1.96-4.42l-.46-.37.31-.53c.69-1.18.84-2.6.4-3.9-.44-1.3-1.38-2.36-2.62-2.95zm-5.6 18.37-3.49-6.04 6.08-3.51 3.49 6.04-6.08 3.51zm4.27-10.44-6.08 3.51-3.49-6.04 6.08-3.51 3.49 6.04z" fill="white"/></svg>Claude</button>
     </div>
-  </div>
+
+    <div class="shortcuts-layer">
+      <span class="edit-toggle" id="edit-toggle">편집</span>
+      <div class="shortcuts-grid" id="shortcuts-grid"></div>
+    </div>
+
+    <div class="bottom-col">
+      <div class="weather-layer">
+        <button id="location-btn" onclick="changeLocation()" style="position:absolute;top:10px;right:0;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.15);color:#8890aa;font-size:11px;padding:3px 9px;border-radius:20px;cursor:pointer;z-index:2;transition:all 0.15s;" onmouseover="this.style.background='rgba(255,255,255,0.13)'" onmouseout="this.style.background='rgba(255,255,255,0.07)'">📍 <span id="location-label">서울특별시</span></button>
+        <div id="weather-content"><div class="weather-loading">날씨 불러오는 중...</div></div>
+      </div>
+    </div>
+  </div><!-- /content-col -->
 </div>
 
 <div id="toast"></div>
@@ -254,12 +254,12 @@ const SITE_ICONS={
   google:`<svg viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg"><rect width="50" height="50" rx="11" fill="white" stroke="#e0e0e0" stroke-width="1"/><path d="M38.5 25.2c0-.9-.1-1.8-.2-2.7H25v5.1h7.6c-.3 1.7-1.4 3.2-2.9 4.1v3.4h4.7c2.8-2.5 4.1-6.3 4.1-9.9z" fill="#4285F4"/><path d="M25 39c3.8 0 7-1.3 9.3-3.4l-4.7-3.4c-1.3.8-2.9 1.3-4.6 1.3-3.5 0-6.5-2.4-7.6-5.6H12.6v3.5C14.9 36.1 19.7 39 25 39z" fill="#34A853"/><path d="M17.4 27.9c-.3-.8-.4-1.6-.4-2.4s.1-1.7.4-2.4v-3.5h-4.8C11.3 21.4 11 23.2 11 25s.3 3.6 1.6 5.4l4.8-2.5z" fill="#FBBC05"/><path d="M25 17c2 0 3.8.7 5.2 2l3.8-3.8C31.9 13 28.8 11.5 25 11.5c-5.3 0-10.1 2.9-12.4 7.5l4.8 3.5C18.5 19.4 21.5 17 25 17z" fill="#EA4335"/></svg>`,
   sogang:`<svg viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="sg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#A31621"/><stop offset="100%" stop-color="#7A0E18"/></linearGradient></defs><rect width="50" height="50" rx="11" fill="url(#sg)"/><path d="M16 20c0-2.2 1.8-4 4-4h2c2.2 0 4 1.8 4 4v1.5c0 1-.8 1.8-1.8 1.8s-1.8-.8-1.8-1.8V20.5c0-.3-.2-.5-.5-.5h-2c-.3 0-.5.2-.5.5v3c0 .3.2.5.5.5h2c2.2 0 4 1.8 4 4v1.5c0 2.2-1.8 4-4 4h-2c-2.2 0-4-1.8-4-4v-1.5c0-1 .8-1.8 1.8-1.8s1.8.8 1.8 1.8v1c0 .3.2.5.5.5h2c.3 0 .5-.2.5-.5v-3c0-.3-.2-.5-.5-.5h-2c-2.2 0-4-1.8-4-4V20z" fill="white"/><path d="M28 16h3.5v11.5c0 .3.2.5.5.5s.5-.2.5-.5V16H36v11.5c0 2.2-1.8 4-4 4s-4-1.8-4-4V16z" fill="white"/></svg>`,
   gmail:`<svg viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg"><rect width="50" height="50" rx="11" fill="white" stroke="#e0e0e0" stroke-width="1"/><path d="M9 15h32v22H9z" fill="#f1f3f4"/><path d="M9 15l16 12 16-12" fill="none" stroke="white" stroke-width="1.5"/><path d="M9 15v22h5V22.5L25 31l11-8.5V37h5V15L25 27z" fill="white"/><path d="M9 15l16 12 16-12H9z" fill="#EA4335"/><path d="M9 15v22h5V22.5L9 15zm32 0v22h-5V22.5L41 15z" fill="#C5221F"/></svg>`,
-  hansol:`<svg viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="hg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#1D6FA4"/><stop offset="100%" stop-color="#0D4A75"/></linearGradient></defs><rect width="50" height="50" rx="11" fill="url(#hg)"/><path d="M13 12h5.5v10h9V12H33v26h-5.5V27h-9v11H13z" fill="white"/><circle cx="36" cy="36" r="6" fill="#2CC84D"/><path d="M33.5 36l2 2 4-4" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>`,
+  hansol:`<svg viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="hg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#1D6FA4"/><stop offset="100%" stop-color="#0D4A75"/></linearGradient></defs><rect width="50" height="50" rx="11" fill="url(#hg)"/><path d="M13 12h5.5v10h9V12H33v26h-5.5V27h-9v11H13z" fill="white"/></svg>`,
   calendar:`<svg viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg"><rect width="50" height="50" rx="11" fill="white" stroke="#e0e0e0" stroke-width="1"/><rect x="8" y="14" width="34" height="28" rx="4" fill="white" stroke="#dadce0" stroke-width="1.5"/><rect x="8" y="14" width="34" height="10" rx="4" fill="#03C75A"/><rect x="8" y="20" width="34" height="4" fill="#03C75A"/><rect x="16" y="8" width="4" height="10" rx="2" fill="#03C75A"/><rect x="30" y="8" width="4" height="10" rx="2" fill="#03C75A"/><text x="25" y="38" font-size="12" font-weight="900" font-family="Arial Black,sans-serif" text-anchor="middle" fill="#03C75A">11</text></svg>`,
   gdrive:`<svg viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg"><rect width="50" height="50" rx="11" fill="white" stroke="#e0e0e0" stroke-width="1"/><path d="M25 9l10 17H15z" fill="#4285F4"/><path d="M7 37h14l5-8H12z" fill="#34A853"/><path d="M29 37h14L33 21l-5 8-4 8z" fill="#FBBC05"/></svg>`,
   nfinance:`<svg viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg"><rect width="50" height="50" rx="11" fill="#03C75A"/><polyline points="9,36 17,26 23,31 31,19 41,23" fill="none" stroke="white" stroke-width="2.8" stroke-linejoin="round" stroke-linecap="round"/><polyline points="31,19 41,19 41,29" fill="none" stroke="white" stroke-width="2.8" stroke-linejoin="round" stroke-linecap="round"/></svg>`,
   nmap:`<svg viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg"><rect width="50" height="50" rx="11" fill="#03C75A"/><path d="M25 8c-7 0-12 5.6-12 12.5 0 9.5 12 22.5 12 22.5s12-13 12-22.5C37 13.6 32 8 25 8zm0 16.5a4.5 4.5 0 110-9 4.5 4.5 0 010 9z" fill="white"/></svg>`,
-  gmap:`<svg viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg"><rect width="50" height="50" rx="11" fill="white" stroke="#e0e0e0" stroke-width="1"/><path d="M25 7c-7.2 0-13 5.8-13 13 0 10 13 24 13 24s13-14 13-24c0-7.2-5.8-13-13-13z" fill="#EA4335"/><circle cx="25" cy="20" r="5.5" fill="white"/><ellipse cx="25" cy="43" rx="7" ry="2.5" fill="#34A853" opacity="0.35"/></svg>`,
+  gmap:`<svg viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg"><rect width="50" height="50" rx="11" fill="white" stroke="#e0e0e0" stroke-width="1"/><path d="M25 7c-7.2 0-13 5.8-13 13 0 10 13 24 13 24s13-14 13-24c0-7.2-5.8-13-13-13z" fill="#EA4335"/><circle cx="25" cy="20" r="5.5" fill="white"/></svg>`,
   github:`<svg viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg"><rect width="50" height="50" rx="11" fill="#161B22"/><path fill-rule="evenodd" clip-rule="evenodd" d="M25 8.5a17 17 0 00-5.37 33.14c.85.16 1.16-.37 1.16-.82l-.02-3.18c-4.72 1.03-5.71-2.28-5.71-2.28-.77-1.96-1.88-2.48-1.88-2.48-1.54-1.05.12-1.03.12-1.03 1.7.12 2.6 1.75 2.6 1.75 1.51 2.6 3.97 1.85 4.94 1.41.15-1.1.59-1.85 1.07-2.27-3.77-.43-7.73-1.89-7.73-8.4 0-1.85.66-3.37 1.74-4.56-.17-.43-.75-2.15.17-4.49 0 0 1.42-.46 4.67 1.74a16.25 16.25 0 018.5 0c3.25-2.2 4.67-1.74 4.67-1.74.92 2.34.34 4.06.17 4.49 1.08 1.19 1.74 2.71 1.74 4.56 0 6.53-3.97 7.96-7.75 8.38.61.52 1.15 1.56 1.15 3.15l-.02 4.67c0 .45.3.98 1.16.82A17 17 0 0025 8.5z" fill="white"/></svg>`,
 };
 const EMOJI_FALLBACK=['🌟','📌','🔖','💡','🎯','⚡','🌈','🔥','📎','🗂'];
@@ -340,7 +340,7 @@ function getQuery(){return document.getElementById(isMobile?'sq-m':'sq-d').value
 document.getElementById('sq-d').addEventListener('keydown',e=>{if(e.key==='Enter')doSearch('naver');});
 document.getElementById('sq-m').addEventListener('keydown',e=>{if(e.key==='Enter')doSearch('naver');});
 
-const HOME_URLS={naver:'https://www.naver.com/',google:'https://www.google.com/',chatgpt:'https://chatgpt.com/',gemini:'https://gemini.google.com/app',claude:'https://claude.ai/',perplexity:'https://www.perplexity.ai/'};
+const HOME_URLS={naver:'https://www.naver.com/',google:'https://www.google.com/',chatgpt:'https://chatgpt.com/',gemini:'https://gemini.google.com/app',claude:'https://claude.ai/'};
 
 function doSearch(engine){
   const q=getQuery();
@@ -351,7 +351,7 @@ function doAI(ai){
   const q=getQuery();
   if(!q){openTab(HOME_URLS[ai]);return;}
   if(ai==='gemini'){navigator.clipboard.writeText(q).catch(()=>{});openTab('https://gemini.google.com/app');showToast('질문이 클립보드에 복사됐습니다. Ctrl+V로 붙여넣기 해주세요.');return;}
-  const urls={chatgpt:`https://chatgpt.com/?q=${encodeURIComponent(q)}&hints=search&ref=ext`,claude:`https://claude.ai/new?q=${encodeURIComponent(q)}`,perplexity:`https://www.perplexity.ai/search?q=${encodeURIComponent(q)}&focus=internet`};
+  const urls={chatgpt:`https://chatgpt.com/?q=${encodeURIComponent(q)}&hints=search&ref=ext`,claude:`https://claude.ai/new?q=${encodeURIComponent(q)}`};
   openTab(urls[ai]);
 }
 function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.style.opacity='1';clearTimeout(t._tid);t._tid=setTimeout(()=>{t.style.opacity='0';},3500);}
@@ -375,56 +375,42 @@ const WX_SVG={
   partcloud:`<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">${_SUN}<defs><radialGradient id="pc1" cx="32%" cy="26%"><stop offset="0%" stop-color="#ffffff"/><stop offset="55%" stop-color="#deeffe"/><stop offset="100%" stop-color="#aed4f7"/></radialGradient></defs><circle cx="42" cy="17" r="12" fill="url(#gs)"/><circle cx="38" cy="13" r="4" fill="white" opacity="0.38"/><ellipse cx="30" cy="44" rx="20" ry="10" fill="url(#pc1)"/><ellipse cx="20" cy="40" rx="13" ry="10" fill="url(#pc1)"/><ellipse cx="34" cy="38" rx="14" ry="10" fill="url(#pc1)"/><ellipse cx="46" cy="42" rx="9" ry="7" fill="url(#pc1)"/><ellipse cx="14" cy="42" rx="9" ry="7" fill="url(#pc1)"/></svg>`,
   cloudy:`<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="cl1" cx="32%" cy="26%"><stop offset="0%" stop-color="#ffffff"/><stop offset="55%" stop-color="#deeffe"/><stop offset="100%" stop-color="#aed4f7"/></radialGradient></defs><ellipse cx="32" cy="42" rx="21" ry="10" fill="url(#cl1)"/><ellipse cx="21" cy="37" rx="14" ry="11" fill="url(#cl1)"/><ellipse cx="36" cy="36" rx="15" ry="11" fill="url(#cl1)"/><ellipse cx="48" cy="40" rx="10" ry="8" fill="url(#cl1)"/><ellipse cx="14" cy="40" rx="9" ry="7" fill="url(#cl1)"/></svg>`,
   overcast:`<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="oc1" cx="32%" cy="26%"><stop offset="0%" stop-color="#e8f4ff"/><stop offset="55%" stop-color="#bcd8f2"/><stop offset="100%" stop-color="#88b8e0"/></radialGradient></defs><ellipse cx="32" cy="42" rx="21" ry="10" fill="url(#oc1)"/><ellipse cx="21" cy="37" rx="14" ry="11" fill="url(#oc1)"/><ellipse cx="36" cy="36" rx="15" ry="11" fill="url(#oc1)"/><ellipse cx="48" cy="40" rx="10" ry="8" fill="url(#oc1)"/><ellipse cx="14" cy="40" rx="9" ry="7" fill="url(#oc1)"/></svg>`,
-  drizzle:`<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="dr1" cx="32%" cy="26%"><stop offset="0%" stop-color="#deeffe"/><stop offset="55%" stop-color="#b0d0f0"/><stop offset="100%" stop-color="#80b0d8"/></radialGradient></defs><ellipse cx="32" cy="36" rx="21" ry="10" fill="url(#dr1)"/><ellipse cx="21" cy="31" rx="14" ry="11" fill="url(#dr1)"/><ellipse cx="36" cy="30" rx="15" ry="11" fill="url(#dr1)"/><g stroke="#7badd4" stroke-width="1.8" stroke-linecap="round"><line x1="16" y1="47" x2="13" y2="55"/><line x1="24" y1="47" x2="21" y2="55"/><line x1="32" y1="47" x2="29" y2="55"/><line x1="40" y1="47" x2="37" y2="55"/><line x1="48" y1="47" x2="45" y2="55"/></g></svg>`,
   rain:`<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="rn1" cx="32%" cy="26%"><stop offset="0%" stop-color="#c8dff5"/><stop offset="55%" stop-color="#90bce0"/><stop offset="100%" stop-color="#60a0d0"/></radialGradient></defs><ellipse cx="32" cy="32" rx="21" ry="10" fill="url(#rn1)"/><ellipse cx="21" cy="27" rx="14" ry="11" fill="url(#rn1)"/><ellipse cx="36" cy="26" rx="15" ry="11" fill="url(#rn1)"/><g stroke="#4a8bbf" stroke-width="2.2" stroke-linecap="round"><line x1="16" y1="44" x2="12" y2="54"/><line x1="24" y1="44" x2="20" y2="54"/><line x1="32" y1="44" x2="28" y2="54"/><line x1="40" y1="44" x2="36" y2="54"/><line x1="48" y1="44" x2="44" y2="54"/></g></svg>`,
-  snow:`<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="sn1" cx="32%" cy="26%"><stop offset="0%" stop-color="#ffffff"/><stop offset="55%" stop-color="#deeffe"/><stop offset="100%" stop-color="#aed4f7"/></radialGradient></defs><ellipse cx="32" cy="32" rx="21" ry="10" fill="url(#sn1)"/><ellipse cx="21" cy="27" rx="14" ry="11" fill="url(#sn1)"/><ellipse cx="36" cy="26" rx="15" ry="11" fill="url(#sn1)"/><g fill="#b8d8f0"><circle cx="16" cy="46" r="3"/><circle cx="26" cy="48" r="3"/><circle cx="36" cy="46" r="3"/><circle cx="46" cy="48" r="3"/><circle cx="21" cy="56" r="3"/><circle cx="32" cy="57" r="3"/><circle cx="43" cy="56" r="3"/></g></svg>`,
+  snow:`<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="sn1" cx="32%" cy="26%"><stop offset="0%" stop-color="#ffffff"/><stop offset="55%" stop-color="#deeffe"/><stop offset="100%" stop-color="#aed4f7"/></radialGradient></defs><ellipse cx="32" cy="32" rx="21" ry="10" fill="url(#sn1)"/><ellipse cx="21" cy="27" rx="14" ry="11" fill="url(#sn1)"/><ellipse cx="36" cy="26" rx="15" ry="11" fill="url(#sn1)"/><g fill="#b8d8f0"><circle cx="16" cy="46" r="3"/><circle cx="26" cy="48" r="3"/><circle cx="36" cy="46" r="3"/><circle cx="46" cy="48" r="3"/></g></svg>`,
   thunder:`<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="th1" cx="32%" cy="26%"><stop offset="0%" stop-color="#b0c8e0"/><stop offset="55%" stop-color="#7898b8"/><stop offset="100%" stop-color="#507090"/></radialGradient><linearGradient id="lg1" x1="0%" y1="0%" x2="80%" y2="100%"><stop offset="0%" stop-color="#fff9c4"/><stop offset="100%" stop-color="#f59e0b"/></linearGradient></defs><ellipse cx="32" cy="30" rx="21" ry="10" fill="url(#th1)"/><ellipse cx="21" cy="25" rx="14" ry="11" fill="url(#th1)"/><ellipse cx="36" cy="24" rx="15" ry="11" fill="url(#th1)"/><polygon points="31,38 24,51 31,51 22,63 40,48 32,48" fill="url(#lg1)"/></svg>`,
-  fog:`<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="fg1" cx="32%" cy="26%"><stop offset="0%" stop-color="#e8f4ff"/><stop offset="55%" stop-color="#bcd8f2"/><stop offset="100%" stop-color="#88b8e0"/></radialGradient></defs><ellipse cx="32" cy="26" rx="21" ry="10" fill="url(#fg1)"/><ellipse cx="21" cy="21" rx="14" ry="11" fill="url(#fg1)"/><ellipse cx="36" cy="20" rx="15" ry="11" fill="url(#fg1)"/><g stroke="#b0c8e0" stroke-width="2.5" stroke-linecap="round"><line x1="8" y1="40" x2="52" y2="40"/><line x1="10" y1="48" x2="50" y2="48"/><line x1="14" y1="56" x2="46" y2="56"/></g></svg>`,
 };
 
 function wxIconSVG(pty,sky,sz){
   const s=sz||14;
   const p=parseInt(pty)||0;
   const k=parseInt(sky)||1;
-  if(p===4){ // 소나기
-    return `<g transform="scale(${s/16})"><ellipse cx="8" cy="5" rx="6" ry="3.5" fill="#90bce0"/><ellipse cx="4" cy="4" rx="4" ry="3" fill="#b0d0f0"/><ellipse cx="11" cy="4" rx="4" ry="3" fill="#a0c8e8"/><line x1="6" y1="10" x2="5" y2="13" stroke="#5599cc" stroke-width="1.8" stroke-linecap="round"/><line x1="10" y1="10" x2="9" y2="13" stroke="#5599cc" stroke-width="1.8" stroke-linecap="round"/></g>`;
-  }
-  if(p===1||p===2){ // 비/비눈
-    return `<g transform="scale(${s/16})"><ellipse cx="8" cy="5" rx="6" ry="3.5" fill="#90bce0"/><ellipse cx="4" cy="4" rx="4" ry="3" fill="#b0d0f0"/><ellipse cx="11" cy="4" rx="4" ry="3" fill="#a0c8e8"/><line x1="5" y1="10" x2="4" y2="14" stroke="#5599cc" stroke-width="1.5" stroke-linecap="round"/><line x1="8" y1="10" x2="7" y2="14" stroke="#5599cc" stroke-width="1.5" stroke-linecap="round"/><line x1="11" y1="10" x2="10" y2="14" stroke="#5599cc" stroke-width="1.5" stroke-linecap="round"/></g>`;
-  }
-  if(p===3){ // 눈
-    return `<g transform="scale(${s/16})"><ellipse cx="8" cy="5" rx="6" ry="3.5" fill="#c8e0f8"/><ellipse cx="4" cy="4" rx="4" ry="3" fill="#deeffe"/><ellipse cx="11" cy="4" rx="4" ry="3" fill="#deeffe"/><circle cx="5" cy="12" r="1.2" fill="#a0c8f0"/><circle cx="8" cy="13" r="1.2" fill="#a0c8f0"/><circle cx="11" cy="12" r="1.2" fill="#a0c8f0"/></g>`;
-  }
-  if(k===1){ // 맑음
-    return `<g transform="scale(${s/16})"><circle cx="8" cy="8" r="4" fill="#fbbf24"/><g stroke="#f59e0b" stroke-width="1.2" stroke-linecap="round"><line x1="8" y1="1" x2="8" y2="3"/><line x1="8" y1="13" x2="8" y2="15"/><line x1="1" y1="8" x2="3" y2="8"/><line x1="13" y1="8" x2="15" y2="8"/><line x1="2.8" y1="2.8" x2="4.2" y2="4.2"/><line x1="11.8" y1="2.8" x2="13.2" y2="4.2"/><line x1="2.8" y1="13.2" x2="4.2" y2="11.8"/><line x1="11.8" y1="13.2" x2="13.2" y2="11.8"/></g></g>`;
-  }
-  if(k===3){ // 구름많음
-    return `<g transform="scale(${s/16})"><circle cx="11" cy="5" r="3.5" fill="#fbbf24"/><ellipse cx="7" cy="11" rx="6" ry="3.5" fill="#c8dff5"/><ellipse cx="4" cy="10" rx="4" ry="3" fill="#deeffe"/><ellipse cx="10" cy="9.5" rx="4.5" ry="3.2" fill="#deeffe"/></g>`;
-  }
-  // 흐림(k===4)
+  if(p===4){return `<g transform="scale(${s/16})"><ellipse cx="8" cy="5" rx="6" ry="3.5" fill="#90bce0"/><ellipse cx="4" cy="4" rx="4" ry="3" fill="#b0d0f0"/><ellipse cx="11" cy="4" rx="4" ry="3" fill="#a0c8e8"/><line x1="6" y1="10" x2="5" y2="13" stroke="#5599cc" stroke-width="1.8" stroke-linecap="round"/><line x1="10" y1="10" x2="9" y2="13" stroke="#5599cc" stroke-width="1.8" stroke-linecap="round"/></g>`;}
+  if(p===1||p===2){return `<g transform="scale(${s/16})"><ellipse cx="8" cy="5" rx="6" ry="3.5" fill="#90bce0"/><ellipse cx="4" cy="4" rx="4" ry="3" fill="#b0d0f0"/><ellipse cx="11" cy="4" rx="4" ry="3" fill="#a0c8e8"/><line x1="5" y1="10" x2="4" y2="14" stroke="#5599cc" stroke-width="1.5" stroke-linecap="round"/><line x1="8" y1="10" x2="7" y2="14" stroke="#5599cc" stroke-width="1.5" stroke-linecap="round"/><line x1="11" y1="10" x2="10" y2="14" stroke="#5599cc" stroke-width="1.5" stroke-linecap="round"/></g>`;}
+  if(p===3){return `<g transform="scale(${s/16})"><ellipse cx="8" cy="5" rx="6" ry="3.5" fill="#c8e0f8"/><ellipse cx="4" cy="4" rx="4" ry="3" fill="#deeffe"/><ellipse cx="11" cy="4" rx="4" ry="3" fill="#deeffe"/><circle cx="5" cy="12" r="1.2" fill="#a0c8f0"/><circle cx="8" cy="13" r="1.2" fill="#a0c8f0"/><circle cx="11" cy="12" r="1.2" fill="#a0c8f0"/></g>`;}
+  if(k===1){return `<g transform="scale(${s/16})"><circle cx="8" cy="8" r="4" fill="#fbbf24"/><g stroke="#f59e0b" stroke-width="1.2" stroke-linecap="round"><line x1="8" y1="1" x2="8" y2="3"/><line x1="8" y1="13" x2="8" y2="15"/><line x1="1" y1="8" x2="3" y2="8"/><line x1="13" y1="8" x2="15" y2="8"/><line x1="2.8" y1="2.8" x2="4.2" y2="4.2"/><line x1="11.8" y1="2.8" x2="13.2" y2="4.2"/><line x1="2.8" y1="13.2" x2="4.2" y2="11.8"/><line x1="11.8" y1="13.2" x2="13.2" y2="11.8"/></g></g>`;}
+  if(k===3){return `<g transform="scale(${s/16})"><circle cx="11" cy="5" r="3.5" fill="#fbbf24"/><ellipse cx="7" cy="11" rx="6" ry="3.5" fill="#c8dff5"/><ellipse cx="4" cy="10" rx="4" ry="3" fill="#deeffe"/><ellipse cx="10" cy="9.5" rx="4.5" ry="3.2" fill="#deeffe"/></g>`;}
   return `<g transform="scale(${s/16})"><ellipse cx="8" cy="10" rx="6" ry="3.5" fill="#bcd8f2"/><ellipse cx="5" cy="9" rx="4" ry="3" fill="#c8e0f4"/><ellipse cx="10" cy="8.5" rx="4.5" ry="3.2" fill="#c8e0f4"/></g>`;
 }
 
-/* SKY: 1맑음 3구름많음 4흐림 / PTY: 0없음 1비 2비눈 3눈 4소나기 */
 function kmaCode2Svg(sky,pty){
-  if(pty===4)          return WX_SVG.rain;
-  if(pty===1||pty===2) return WX_SVG.rain;
-  if(pty===3)          return WX_SVG.snow;
-  if(sky===1)          return WX_SVG.sunny;
-  if(sky===3)          return WX_SVG.partcloud;
+  const p=parseInt(pty)||0,k=parseInt(sky)||1;
+  if(p===4||p===1||p===2) return WX_SVG.rain;
+  if(p===3) return WX_SVG.snow;
+  if(k===1) return WX_SVG.sunny;
+  if(k===3) return WX_SVG.partcloud;
   return WX_SVG.overcast;
 }
 function kmaCode2Desc(sky,pty){
-  if(pty===4) return '소나기';
-  if(pty===1) return '비';
-  if(pty===2) return '비/눈';
-  if(pty===3) return '눈';
-  if(sky===1) return '맑음';
-  if(sky===3) return '구름많음';
+  const p=parseInt(pty)||0,k=parseInt(sky)||1;
+  if(p===4) return '소나기';
+  if(p===1) return '비';
+  if(p===2) return '비/눈';
+  if(p===3) return '눈';
+  if(k===1) return '맑음';
+  if(k===3) return '구름많음';
   return '흐림';
 }
 
-/* 위경도 → 기상청 격자 변환 */
 function latLon2Grid(lat,lon){
   const RE=6371.00877,GRID=5.0,SLAT1=30.0,SLAT2=60.0,OLON=126.0,OLAT=38.0,XO=43,YO=136;
   const DEGRAD=Math.PI/180;
@@ -439,7 +425,6 @@ function latLon2Grid(lat,lon){
   return{nx:Math.floor(ra*Math.sin(theta)+XO+0.5),ny:Math.floor(ro-ra*Math.cos(theta)+YO+0.5)};
 }
 
-/* base_date / base_time 계산 */
 function getBaseDateTime(){
   const now=new Date(),h=now.getHours();
   const baseTimes=[2,5,8,11,14,17,20,23];
@@ -464,11 +449,30 @@ function changeLocation(){
     .then(r=>r.json()).then(data=>{
       if(!data||!data.length){alert(`"${input.trim()}" 위치를 찾을 수 없습니다.`);return;}
       const{lat,lon,display_name}=data[0];
-      const shortName=display_name.split(',')[0].trim();
-      currentLocation={name:shortName,lat:parseFloat(lat),lon:parseFloat(lon)};
-      document.getElementById('location-label').textContent=shortName;
+      currentLocation={name:display_name.split(',')[0].trim(),lat:parseFloat(lat),lon:parseFloat(lon)};
+      document.getElementById('location-label').textContent=currentLocation.name;
       loadWeather();
     }).catch(()=>alert('위치 검색에 실패했습니다.'));
+}
+
+function initLocation(){
+  if(!navigator.geolocation){loadWeather();return;}
+  navigator.geolocation.getCurrentPosition(
+    pos=>{
+      const{latitude:lat,longitude:lon}=pos.coords;
+      fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json&accept-language=ko`)
+        .then(r=>r.json())
+        .then(data=>{
+          const addr=data.address;
+          const name=addr.city||addr.town||addr.county||addr.state||'현재위치';
+          currentLocation={name,lat,lon};
+          document.getElementById('location-label').textContent=name;
+          loadWeather();
+        }).catch(()=>loadWeather());
+    },
+    ()=>loadWeather(),
+    {timeout:5000}
+  );
 }
 
 async function loadWeather(){
@@ -485,7 +489,6 @@ async function loadWeather(){
     const items=json?.response?.body?.items?.item||[];
     if(!items.length) throw new Error('데이터 없음');
 
-    /* 시간별 슬롯 구성 — carry-forward 없이 원본 그대로 */
     const byTime={};
     items.forEach(({fcstDate,fcstTime,category,fcstValue})=>{
       const k=`${fcstDate}${fcstTime}`;
@@ -496,8 +499,6 @@ async function loadWeather(){
 
     const now=new Date();
     const nowKey=padDate(now)+String(now.getHours()).padStart(2,'0')+'00';
-
-    /* 현재 슬롯 */
     let curSlot=slots[0];
     for(const s of slots){if(s.date+s.time<=nowKey)curSlot=s;else break;}
     const curTemp=Math.round(parseFloat(curSlot.TMP||0));
@@ -506,18 +507,17 @@ async function loadWeather(){
     const curHum=parseInt(curSlot.REH||0);
     const curRain=parseInt(curSlot.POP||0);
 
-    /* 시간별 차트: 현재~+10시간, 1시간 간격, 최대 11포인트 */
     const chartPts=[];
     const nowMs=now.getTime();
     for(const s of slots){
       if(chartPts.length>=9) break;
       const h=parseInt(s.time.slice(0,2));
       const slotMs=new Date(parseInt(s.date.slice(0,4)),parseInt(s.date.slice(4,6))-1,parseInt(s.date.slice(6,8)),h).getTime();
-      if(slotMs>=nowMs-1800000)
-        chartPts.push({hour:h,temp:Math.round(parseFloat(s.TMP||0)),rain:parseInt(s.POP||0),sky:parseInt(s.SKY||1),pty:parseInt(s.PTY||0)});
+      if(slotMs>=nowMs-3600000){
+        chartPts.push({hour:h,temp:Math.round(parseFloat(s.TMP||0)),rain:parseInt(s.POP||0),sky:s.SKY!==undefined?parseInt(s.SKY):null,pty:s.PTY!==undefined?parseInt(s.PTY):null});
+      }
     }
 
-    /* 일별 집계 */
     const dayMap={};
     slots.forEach(s=>{
       const dk=s.date;
@@ -530,16 +530,10 @@ async function loadWeather(){
     const todayKey=padDate(now);
     const futureDays=Object.keys(dayMap).filter(dk=>dk>todayKey).sort();
 
-    /* 차트 SVG */
     function makeTempChart(pts){
       if(!pts.length) return '';
-      const STEP=30,PAD=10,H=90;
-      const FS=10.5;
-      const ICON_SZ=14;
-      const ROW_TIME=H+14;
-      const ROW_ICON_CY=H+32;   // 아이콘 중심 y (시간~강수 정가운데)
-      const ROW_RAIN=H+50;
-      const TOTAL_H=ROW_RAIN+8;
+      const STEP=30,PAD=10,H=90,FS=10.5,ICON_SZ=14;
+      const ROW_TIME=H+14,ROW_ICON=H+32,ROW_RAIN=H+50,TOTAL_H=ROW_RAIN+8;
       const W=PAD+(pts.length-1)*STEP+PAD;
       const temps=pts.map(p=>p.temp);
       const mn=Math.min(...temps),mx=Math.max(...temps),range=mx-mn||1;
@@ -549,33 +543,23 @@ async function loadWeather(){
       for(let i=1;i<xs.length;i++) path+=` L${xs[i]},${ys[i]}`;
       const dots=pts.map((p,i)=>{
         const pty=p.pty!==null?p.pty:0;
-        const sky=p.sky!==null?p.sky:0;
-        const iconG=p.sky!==null
-          ?`<g transform="translate(${xs[i]-ICON_SZ/2},${ROW_ICON_CY-ICON_SZ/2})">${wxIconSVG(pty,sky,ICON_SZ)}</g>`
-          :'';
+        const sky=p.sky!==null?p.sky:1;
+        const iconG=p.sky!==null?`<g transform="translate(${xs[i]-ICON_SZ/2},${ROW_ICON-ICON_SZ/2})">${wxIconSVG(pty,sky,ICON_SZ)}</g>`:'';
         return `<circle cx="${xs[i]}" cy="${ys[i]}" r="3.5" fill="#f0c060"/>` +
           `<text x="${xs[i]}" y="${ys[i]-9}" text-anchor="middle" font-size="${FS}" font-weight="600" fill="#f0f2f8" font-family="sans-serif">${p.temp}°</text>` +
           `<text x="${xs[i]}" y="${ROW_TIME}" text-anchor="middle" font-size="${FS}" fill="#8890aa" font-family="sans-serif">${p.hour}시</text>` +
           iconG +
           `<text x="${xs[i]}" y="${ROW_RAIN}" text-anchor="middle" font-size="${FS}" fill="#7baaf7" font-family="sans-serif">${p.rain>0?p.rain+'%':'-'}</text>`;
       }).join('');
-      // viewBox와 width를 동일하게 고정, 컨테이너도 inline-block으로
-      return `<svg viewBox="0 0 ${W} ${TOTAL_H}" width="${W}" height="${TOTAL_H}" style="display:inline-block;margin-top:4px;flex-shrink:0;">`+
-        `<path d="${path}" fill="none" stroke="rgba(240,192,96,0.55)" stroke-width="1.8"/>${dots}</svg>`;
+      return `<svg viewBox="0 0 ${W} ${TOTAL_H}" width="${W}" height="${TOTAL_H}" style="display:block;"><path d="${path}" fill="none" stroke="rgba(240,192,96,0.55)" stroke-width="1.8"/>${dots}</svg>`;
     }
 
-    /* HTML 조립 */
-    const STEP=30,PAD=10;
-    const chartW=PAD+(chartPts.length-1)*STEP+PAD;
+    const CARD_DATE_H=18,CARD_ICON_H=61,CARD_TEMP_H=28,CARD_DESC_H=18,CARD_RAIN_H=18;
+    const CARD_INNER_H=CARD_DATE_H+CARD_ICON_H+CARD_TEMP_H+CARD_DESC_H+CARD_RAIN_H;
     const wxClick=`<span class="wx-img-link" title="기상청 날씨" onclick="openTab('https://www.weather.go.kr/w/index.do')">${kmaCode2Svg(curSky,curPty)}</span>`;
 
-    /* 카드 공통 내부 높이 상수 */
-    const CARD_DATE_H=18, CARD_ICON_H=61, CARD_TEMP_H=28, CARD_DESC_H=18, CARD_RAIN_H=18;
-    const CARD_INNER_H=CARD_DATE_H+CARD_ICON_H+CARD_TEMP_H+CARD_DESC_H+CARD_RAIN_H; // 143px
-
-    /* 오늘 카드: 왼쪽=미래카드와 동일 구조, 오른쪽=차트 */
     let html=`<div class="weather-scroll">
-      <div class="wx-card today" style="width:fit-content;min-width:unset;max-width:none;flex-shrink:0;padding:12px 12px 10px;">
+      <div class="wx-card today" style="width:fit-content;flex-shrink:0;padding:12px 12px 10px;">
         <div style="display:flex;align-items:flex-start;gap:12px;">
           <div style="display:flex;flex-direction:column;align-items:center;width:82px;flex-shrink:0;">
             <div style="height:${CARD_DATE_H}px;display:flex;align-items:center;color:#8890aa;font-size:11px;white-space:nowrap;">${now.getMonth()+1}/${now.getDate()} (${DAY_KR[now.getDay()]})</div>
@@ -613,7 +597,7 @@ async function loadWeather(){
 }
 
 renderShortcuts();
-loadWeather();
+initLocation();
 </script>
 </body>
 </html>
